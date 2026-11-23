@@ -1,0 +1,2766 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyThunai — Pan-India Verified Matchmaking Platform</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              200: '#fecdd3',
+              300: '#fda4af',
+              400: '#fb7185',
+              500: '#f43f5e',
+              600: '#be123c',
+              700: '#9f1239',
+              800: '#881337',
+              900: '#4c0519',
+            },
+            saffron: {
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.4); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.6); }
+
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translateY(14px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .animate-card-enter { animation: floatUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    @keyframes pulsePop {
+      0% { transform: scale(0.88); opacity: 0; }
+      60% { transform: scale(1.03); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-modal-pop { animation: pulsePop 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    @keyframes wavePulse {
+      0%, 100% { transform: scaleY(0.35); }
+      50% { transform: scaleY(1); }
+    }
+    .wave-bar-active { animation: wavePulse 0.7s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-stone-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col selection:bg-brand-600 selection:text-white">
+
+  <!-- Non-blocking Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-20 md:bottom-6 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- ==================== ONBOARDING / AUTH GATE SCREEN ==================== -->
+  <section id="auth-screen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-rose-50 via-amber-50/60 to-stone-100 dark:from-slate-950 dark:via-brand-950/30 dark:to-slate-900">
+    <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-12 bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden animate-card-enter">
+      
+      <!-- Left Hero Story Panel -->
+      <div class="lg:col-span-5 bg-gradient-to-br from-brand-800 via-brand-700 to-amber-700 p-8 sm:p-10 text-white flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-amber-400/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-rose-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div>
+          <div class="flex items-center gap-3 mb-8">
+            <div class="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center">
+              <i data-lucide="heart-handshake" class="w-6 h-6 text-amber-300"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-display font-extrabold text-2xl tracking-tight">MyThunai</span>
+                <span class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-amber-400 text-slate-950">BHARAT</span>
+              </div>
+              <p class="text-xs text-white/80">Pan-India Verified Matchmaking</p>
+            </div>
+          </div>
+
+          <h1 class="font-display font-extrabold text-2xl sm:text-3xl leading-tight">
+            Where Indian Roots Meet Thoughtful Compatibility.
+          </h1>
+          <p class="text-sm text-white/85 mt-3 leading-relaxed">
+            From Mumbai & Delhi NCR to Chennai, Bengaluru, Kolkata & Jaipur—no endless swiping, no fake parent-only ghosts, and no awkward "Hi" messages. Just 3 curated introductions every evening backed by Blue & Gold verification.
+          </p>
+
+          <div class="mt-8 space-y-3.5 text-xs sm:text-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
+              </div>
+              <span><strong>Daily 3 Curated Drops</strong> at 7:00 PM IST across 40+ Cities</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-300"></i>
+              </div>
+              <span><strong>Duplicate Guard + Blue & Gold Verification</strong></span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+                <i data-lucide="users" class="w-4 h-4 text-sky-300"></i>
+              </div>
+              <span><strong>Family Co-Pilot Mode</strong> with zero private chat access</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-white/75">
+          <span>Mumbai • Delhi NCR • Bengaluru • Chennai • Hyderabad • Pune • Kolkata +35 Cities</span>
+        </div>
+      </div>
+
+      <!-- Right Auth & Backend Connection Panel -->
+      <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="font-display font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">Welcome to MyThunai</h2>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Sign in with Phone OTP / Email or launch Instant Demo Mode</p>
+          </div>
+          <button onclick="toggleTheme()" aria-label="Toggle Theme" class="p-2.5 rounded-xl bg-stone-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-stone-200 dark:border-slate-700">
+            <i data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Mode Selector Tabs -->
+        <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-stone-100 dark:bg-slate-800 mb-6">
+          <button type="button" id="auth-mode-supa-btn" onclick="setAuthMode('supabase')" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm transition">
+            🗄️ Live Supabase Connected
+          </button>
+          <button type="button" id="auth-mode-demo-btn" onclick="setAuthMode('demo')" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-400 transition">
+            ⚡ Offline Demo Mode
+          </button>
+        </div>
+
+        <!-- Auth Form -->
+        <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="auth-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Your Name</label>
+              <input id="auth-name" type="text" value="Aravind Subramanian" required class="w-full bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <div>
+              <label for="auth-phone" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Mobile Number (+91)</label>
+              <input id="auth-phone" type="tel" value="+91 98421 55678" required class="w-full bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="auth-email" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Email Address</label>
+              <input id="auth-email" type="email" value="aravind.s@mythunai.in" required class="w-full bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <div>
+              <label for="auth-password" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Account Password</label>
+              <input id="auth-password" type="password" value="MyThunai@2026" required minlength="6" class="w-full bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+          </div>
+
+          <div>
+            <label for="auth-city" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Home / Current City (40+ Cities)</label>
+            <select id="auth-city" class="india-city-select w-full bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+              <option value="Dindigul, Tamil Nadu" selected>Dindigul, Tamil Nadu</option>
+            </select>
+          </div>
+
+          <!-- Pre-configured Supabase Credentials Drawer -->
+          <div id="supabase-credentials-box" class="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
+                <i data-lucide="database" class="w-4 h-4"></i>
+                <span>MyThunai Supabase Backend Pre-Configured</span>
+              </span>
+              <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-200/80 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-200">Ready</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input id="supa-url-input" type="url" value="https://jblobcjrqudndhbhptcr.supabase.co" class="w-full bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800 rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+              <input id="supa-key-input" type="password" value="sb_publishable_6BfZUIEZ8POEimc-TPI18w_e6Bax9Cp" class="w-full bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800 rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+            </div>
+          </div>
+
+          <div class="pt-2 flex flex-col sm:flex-row items-center gap-3">
+            <button id="auth-submit-btn" type="submit" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-brand-600 to-rose-600 hover:from-brand-700 hover:to-rose-700 text-white font-bold text-sm shadow-lg shadow-brand-600/25 flex items-center justify-center gap-2 transition active:scale-95">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>Sign In & Sync Live Database</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-center text-slate-400">
+            Protected by MyThunai Duplicate Guard & Supabase Row Level Security.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN APPLICATION SHELL ==================== -->
+  <div id="app-shell" class="hidden flex-1 flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-stone-200 dark:border-slate-800 transition-colors">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+        <!-- Brand Logo -->
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('discover')">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-600 via-rose-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+            <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-display font-extrabold text-xl tracking-tight bg-gradient-to-r from-brand-600 to-amber-600 dark:from-brand-400 dark:to-amber-400 bg-clip-text text-transparent">MyThunai</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">BHARAT</span>
+            </div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block leading-none">Pan-India Verified Matchmaking</p>
+          </div>
+        </div>
+
+        <!-- Desktop Navigation Tabs -->
+        <nav class="hidden md:flex items-center bg-stone-100 dark:bg-slate-800/80 p-1 rounded-2xl border border-stone-200/70 dark:border-slate-700/70">
+          <button onclick="switchTab('discover')" data-tab="discover" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Discover</span>
+          </button>
+          <button onclick="switchTab('matches')" data-tab="matches" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all relative">
+            <i data-lucide="message-circle-heart" class="w-4 h-4"></i>
+            <span>Matches & Chat</span>
+            <span id="nav-match-badge" class="ml-1 px-1.5 py-0.2 text-xs rounded-full bg-brand-600 text-white font-bold">2</span>
+          </button>
+          <button onclick="switchTab('copilot')" data-tab="copilot" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all relative">
+            <i data-lucide="users" class="w-4 h-4"></i>
+            <span>Family Co-Pilot</span>
+            <span id="nav-copilot-badge" class="ml-1 px-1.5 py-0.2 text-xs rounded-full bg-amber-500 text-white font-bold">2</span>
+          </button>
+          <button onclick="switchTab('profile')" data-tab="profile" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all">
+            <i data-lucide="user-check" class="w-4 h-4"></i>
+            <span>My Profile</span>
+          </button>
+        </nav>
+
+        <!-- Right Controls -->
+        <div class="flex items-center gap-2">
+          <div id="backend-status-pill" class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 text-xs font-medium">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span id="backend-status-text">Local Demo • Synced</span>
+          </div>
+
+          <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Light/Dark Mode" class="p-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-stone-200 dark:border-slate-700 transition-all">
+            <i id="theme-icon-dark" data-lucide="moon" class="w-4 h-4 hidden"></i>
+            <i id="theme-icon-light" data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+
+          <button onclick="handleSignOut()" title="Switch Account / Connection" class="p-2.5 rounded-xl bg-stone-100 hover:bg-rose-50 dark:bg-slate-800 dark:hover:bg-rose-950/40 text-slate-600 hover:text-rose-600 dark:text-slate-300 border border-stone-200 dark:border-slate-700 transition-all">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 pb-24 md:pb-10">
+
+      <!-- ==================== TAB 1: DISCOVER ==================== -->
+      <section id="tab-discover" class="tab-content block">
+        <div class="max-w-xl mx-auto">
+          <!-- Daily 3 Curated Drop Banner -->
+          <div class="mb-4 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-brand-900 to-slate-900 text-white border border-brand-500/30 shadow-md flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center shrink-0">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-display font-bold text-sm sm:text-base">Daily 3 Curated Introductions</span>
+                  <span id="drop-counter-pill" class="px-2 py-0.5 rounded-full bg-brand-600 text-[11px] font-bold">1 of 3 Today</span>
+                </div>
+                <p class="text-[11px] text-slate-300">Zero swipe fatigue • Across 40+ Indian cities</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/10 border border-white/15 text-xs font-mono font-semibold text-amber-300">
+              <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+              <span id="drop-countdown">Next 7:00 PM Drop: 05h 00m</span>
+            </div>
+          </div>
+
+          <!-- Discover Subheader & Pan-India City Filter Bar -->
+          <div class="space-y-3 mb-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h1 class="font-display font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">Curated Thunai Matches</h1>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Filtered by your hidden dealbreakers & Indian cities</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <label class="inline-flex items-center gap-1.5 text-xs font-semibold bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-700 rounded-xl px-2.5 py-2 cursor-pointer select-none">
+                  <input id="verified-only-toggle" type="checkbox" checked onchange="filterProfiles()" class="accent-emerald-600 rounded" />
+                  <span class="text-slate-700 dark:text-slate-200">Blue & Gold Only</span>
+                </label>
+
+                <label class="inline-flex items-center gap-1.5 text-xs font-semibold bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-xl px-2.5 py-2 cursor-pointer select-none">
+                  <input id="porutham-toggle" type="checkbox" checked onchange="renderDiscoverCard()" class="accent-amber-600 rounded" />
+                  <span class="text-amber-800 dark:text-amber-300">Kundali / Porutham</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Pan-India Searchable City Input + Quick Metro & Tier-2 Pills -->
+            <div class="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 space-y-2.5">
+              <div class="flex flex-col sm:flex-row gap-2">
+                <div class="relative flex-1">
+                  <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                  <input id="city-search-input" type="text" list="all-india-cities-datalist" placeholder="Search any of 40+ Indian cities (e.g., Mumbai, Delhi NCR, Kochi, Jaipur)..." oninput="handleCitySearchInput(this.value)" class="w-full bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-xl pl-8 pr-8 py-2 text-xs font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                  <button type="button" onclick="selectDiscoverCity('all')" title="Reset to All India" class="text-[11px] font-bold text-brand-600 dark:text-brand-400 absolute right-2.5 top-1/2 -translate-y-1/2 hover:underline">
+                    All
+                  </button>
+                  <datalist id="all-india-cities-datalist"></datalist>
+                </div>
+
+                <select id="city-filter" onchange="selectDiscoverCity(this.value)" class="text-xs font-semibold bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                  <option value="all">🇮🇳 All India (40+ Cities)</option>
+                </select>
+              </div>
+
+              <div id="quick-city-pills" class="flex items-center gap-1.5 overflow-x-auto pb-1"></div>
+            </div>
+          </div>
+
+          <!-- Match Card Container -->
+          <div id="discover-card-wrapper" class="relative"></div>
+
+          <!-- Action Buttons Bar -->
+          <div id="discover-actions" class="mt-5 flex items-center justify-center gap-4 sm:gap-6">
+            <button onclick="handleSwipe('pass')" title="Pass" class="group w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 shadow-lg shadow-slate-200/50 dark:shadow-none flex items-center justify-center text-slate-500 hover:text-rose-600 hover:border-rose-300 dark:hover:border-rose-700 hover:scale-105 active:scale-95 transition-all">
+              <i data-lucide="x" class="w-7 h-7 transition-transform group-hover:rotate-12"></i>
+            </button>
+
+            <button onclick="handleSwipe('super')" title="Super Connect (Priority Intro)" class="group w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 text-white shadow-lg shadow-amber-500/30 flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+              <i data-lucide="star" class="w-6 h-6 fill-current"></i>
+            </button>
+
+            <button onclick="handleSwipe('connect')" title="Connect" class="group w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-gradient-to-tr from-brand-600 to-rose-500 text-white shadow-xl shadow-brand-500/30 flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+              <i data-lucide="heart" class="w-8 h-8 fill-current transition-transform group-hover:scale-110"></i>
+            </button>
+          </div>
+
+          <p class="text-center text-xs text-slate-400 dark:text-slate-500 mt-4">
+            Tip: Tap <span class="font-semibold text-amber-500">Star</span> for a Priority Intro or <span class="font-semibold text-brand-500">Heart</span> to express interest.
+          </p>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 2: MATCHES & CHAT ==================== -->
+      <section id="tab-matches" class="tab-content hidden">
+        <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[620px]">
+          
+          <!-- Left Sidebar: Mutual Matches List -->
+          <div id="matches-sidebar" class="md:col-span-4 border-b md:border-b-0 md:border-r border-stone-200 dark:border-slate-800 flex flex-col">
+            <div class="p-4 border-b border-stone-200 dark:border-slate-800">
+              <h2 class="font-display font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2">
+                <span>Mutual Thunai Matches</span>
+                <span id="sidebar-match-count" class="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 font-bold">2</span>
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Private, end-to-end member conversations</p>
+            </div>
+
+            <div id="matches-list" class="flex-1 overflow-y-auto divide-y divide-stone-100 dark:divide-slate-800/70"></div>
+          </div>
+
+          <!-- Right Panel: Active Chat Window -->
+          <div id="chat-panel" class="md:col-span-8 flex flex-col bg-stone-50/50 dark:bg-slate-950/40">
+            <div id="chat-header" class="p-3.5 sm:p-4 bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2"></div>
+            <div id="chat-messages" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 max-h-[410px]"></div>
+
+            <!-- Quick Icebreaker Prompts -->
+            <div id="icebreakers-bar" class="px-4 py-2.5 bg-white/80 dark:bg-slate-900/80 border-t border-stone-200/70 dark:border-slate-800/70">
+              <div class="flex items-center gap-1.5 mb-2">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Pan-India & Regional Icebreakers</span>
+              </div>
+              <div id="icebreakers-row" class="flex gap-2 overflow-x-auto pb-1">
+                <button onclick="sendIcebreaker('Namaste / Vanakkam! South Indian filter coffee or adrak masala chai to start the day? ☕')" class="shrink-0 text-xs px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/50 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 transition">
+                  ☕ Filter coffee or masala chai?
+                </button>
+                <button onclick="sendIcebreaker('Which festival brings your whole family together—Diwali, Pongal, Durga Puja, Onam, or Ganesh Chaturthi? 🪔')" class="shrink-0 text-xs px-3 py-1.5 rounded-full bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/50 dark:hover:bg-brand-900/60 text-brand-700 dark:text-brand-300 border border-brand-200/80 dark:border-brand-800/60 transition">
+                  🪔 Favorite Indian family festival?
+                </button>
+                <button onclick="sendIcebreaker('Dream Indian getaway: misty Himalayas, Coorg/Kodaikanal hills, Udaipur palaces, or Goa beaches? 🏔️')" class="shrink-0 text-xs px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 transition">
+                  🏔️ Himalayas, Western Ghats, or Udaipur?
+                </button>
+                <button onclick="sendIcebreaker('Metro career hustle or settling closer to hometown roots long-term? 🏡')" class="shrink-0 text-xs px-3 py-1.5 rounded-full bg-sky-50 hover:bg-sky-100 dark:bg-sky-950/50 dark:hover:bg-sky-900/60 text-sky-700 dark:text-sky-300 border border-sky-200/80 dark:border-sky-800/60 transition">
+                  🏡 Metro hustle vs. hometown roots?
+                </button>
+              </div>
+            </div>
+
+            <!-- Message Input Form -->
+            <form id="chat-input-form" onsubmit="handleSendMessage(event)" class="p-3 sm:p-4 bg-white dark:bg-slate-900 border-t border-stone-200 dark:border-slate-800 flex items-center gap-2">
+              <input id="chat-input" type="text" placeholder="Write a thoughtful message..." autocomplete="off" class="flex-1 bg-stone-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 text-sm rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 transition" />
+              <button type="submit" class="px-4 sm:px-5 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm flex items-center gap-1.5 shadow-md shadow-brand-500/20 active:scale-95 transition">
+                <span>Send</span>
+                <i data-lucide="send" class="w-4 h-4"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 3: FAMILY CO-PILOT ==================== -->
+      <section id="tab-copilot" class="tab-content hidden">
+        <div class="max-w-5xl mx-auto space-y-6">
+          <div class="bg-gradient-to-r from-brand-700 via-rose-600 to-amber-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div class="max-w-xl">
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-bold uppercase tracking-wider mb-3">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                <span>Shortlist Only • Zero Chat Access</span>
+              </div>
+              <h1 class="font-display font-extrabold text-2xl sm:text-3xl">Family Co-Pilot Mode</h1>
+              <p class="text-sm text-white/90 mt-2 leading-relaxed">
+                Involve your parents or trusted siblings respectfully without sacrificing your independence. Co-Pilots can browse curated profiles and suggest shortlists with notes—<strong>your private chats remain 100% locked to you.</strong>
+              </p>
+            </div>
+
+            <form onsubmit="handleInviteCoPilot(event)" class="w-full md:w-80 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 space-y-3">
+              <h3 class="font-display font-bold text-sm">Invite a Trusted Co-Pilot</h3>
+              <input id="copilot-name-input" type="text" placeholder="Name (e.g., Amma / Priya Akka)" required class="w-full bg-white/95 text-slate-900 placeholder-slate-400 text-xs rounded-xl px-3 py-2.5 focus:outline-none" />
+              <div class="flex gap-2">
+                <select id="copilot-role-input" class="flex-1 bg-white/95 text-slate-900 text-xs rounded-xl px-3 py-2.5 focus:outline-none">
+                  <option value="Mother">Mother</option>
+                  <option value="Father">Father</option>
+                  <option value="Sibling">Sibling</option>
+                  <option value="Trusted Mentor">Trusted Mentor</option>
+                </select>
+                <button type="submit" class="px-4 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-900 text-white text-xs font-bold transition">
+                  Invite
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-4 space-y-4">
+              <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+                <h2 class="font-display font-bold text-base text-slate-900 dark:text-white mb-1">Active Co-Pilots</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">View-only & shortlist permissions enabled</p>
+                <div id="copilot-members-list" class="space-y-3"></div>
+              </div>
+
+              <div class="bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 rounded-3xl p-5">
+                <div class="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-bold text-sm mb-1.5">
+                  <i data-lucide="lock" class="w-4 h-4"></i>
+                  <span>Boundary Guarantee</span>
+                </div>
+                <p class="text-xs text-emerald-700/90 dark:text-emerald-400 leading-relaxed">
+                  Co-Pilots cannot read your messages, see who you decline, or send messages on your behalf.
+                </p>
+              </div>
+            </div>
+
+            <div class="lg:col-span-8">
+              <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 class="font-display font-bold text-lg text-slate-900 dark:text-white">Shortlisted by Your Family</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Approve to move a recommendation into your private matches</p>
+                  </div>
+                </div>
+                <div id="copilot-shortlist-feed" class="space-y-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 4: MY PROFILE & DUPLICATE GUARD ==================== -->
+      <section id="tab-profile" class="tab-content hidden">
+        <div class="max-w-5xl mx-auto">
+          <div id="duplicate-alert-banner" class="hidden mb-6 rounded-3xl bg-amber-50 dark:bg-amber-950/60 border-2 border-amber-400 dark:border-amber-600 p-5 shadow-lg animate-card-enter">
+            <div class="flex items-start gap-4">
+              <div class="w-11 h-11 rounded-2xl bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
+                <i data-lucide="shield-alert" class="w-6 h-6"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="font-display font-bold text-base sm:text-lg text-amber-900 dark:text-amber-200">
+                    Duplicate Profile Detection Alert
+                  </h3>
+                  <button onclick="dismissDuplicateAlert()" class="text-amber-700 dark:text-amber-400 hover:underline text-xs font-semibold">
+                    Dismiss
+                  </button>
+                </div>
+                <p id="duplicate-alert-reason" class="text-xs sm:text-sm text-amber-800 dark:text-amber-300 mt-1 leading-relaxed">
+                  Our trust engine detected an existing verified account matching these details. MyThunai enforces a strict one-person, one-verified-profile policy.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Column: Live Profile Card Preview -->
+            <div class="lg:col-span-5">
+              <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm sticky top-24">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Live Card Preview</span>
+                  <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full">
+                    <i data-lucide="badge-check" class="w-3.5 h-3.5"></i> Blue & Gold Verified
+                  </span>
+                </div>
+
+                <div class="relative rounded-2xl overflow-hidden aspect-[4/4.6] bg-stone-200 dark:bg-slate-800 mb-4 group">
+                  <img id="preview-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" alt="Profile Preview" onerror="this.src='https://placehold.co/600x750/e11d48/ffffff?text=MyThunai+Member'" class="w-full h-full object-cover transition-all duration-500" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
+
+                  <div id="preview-blur-badge" class="hidden absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-amber-300 text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1.5 border border-white/15">
+                    <i data-lucide="eye-off" class="w-3.5 h-3.5"></i>
+                    <span>Privacy Blur Active</span>
+                  </div>
+                  
+                  <label for="photo-upload" class="absolute top-3 right-3 cursor-pointer bg-black/60 hover:bg-black/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-2 rounded-xl flex items-center gap-1.5 border border-white/20 transition">
+                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                    <span>Change Photo</span>
+                  </label>
+
+                  <div class="absolute bottom-4 left-4 right-4 text-white">
+                    <span id="preview-managed-badge" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/90 text-slate-950 text-[11px] font-extrabold mb-1.5">
+                      ✓ Self-Managed Profile
+                    </span>
+                    <div class="flex items-baseline gap-2">
+                      <h3 id="preview-name" class="font-display font-bold text-2xl">Aravind Subramanian</h3>
+                      <span id="preview-age" class="text-lg font-medium text-white/90">29</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-white/90 flex items-center gap-1.5 mt-1">
+                      <i data-lucide="briefcase" class="w-3.5 h-3.5 text-amber-300"></i>
+                      <span id="preview-occupation">Product Architect</span>
+                    </p>
+                    <p class="text-xs sm:text-sm text-white/90 flex items-center gap-1.5 mt-0.5">
+                      <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i>
+                      <span id="preview-location">Dindigul, Tamil Nadu</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div id="preview-jathagam-pill" class="mb-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 text-xs font-medium text-amber-800 dark:text-amber-300">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                  <span id="preview-jathagam-text">Simham / Leo • Magam (28/36 Gunas)</span>
+                </div>
+
+                <p id="preview-bio" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
+                  Born in Dindigul, building products across Bengaluru & Chennai. Passionate about Indian classical fusion, weekend road trips, and finding a thoughtful partner who values warmth and humor.
+                </p>
+
+                <div class="p-3 rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/70 dark:border-slate-700/70 text-xs space-y-1.5 mb-3">
+                  <div class="flex justify-between">
+                    <span class="text-slate-400">Family Vibe:</span>
+                    <span id="preview-family-val" class="font-semibold text-slate-700 dark:text-slate-200">Close-knit Nuclear / Joint Friendly</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-slate-400">Sunday Morning:</span>
+                    <span id="preview-weekend-val" class="font-semibold text-slate-700 dark:text-slate-200">Filter Coffee & Road Trips</span>
+                  </div>
+                </div>
+
+                <div id="preview-tags" class="flex flex-wrap gap-1.5"></div>
+              </div>
+            </div>
+
+            <!-- Right Column: Profile Editor -->
+            <div class="lg:col-span-7">
+              <form onsubmit="handleProfileSave(event)" class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 dark:border-slate-800 pb-4">
+                  <div>
+                    <h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">Edit Your Thunai Profile</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Updates reflect live & sync to Supabase</p>
+                  </div>
+                  <button type="button" onclick="simulateDuplicateAlert()" class="text-xs font-semibold px-3 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/40 dark:hover:bg-amber-900/70 text-amber-800 dark:text-amber-300 border border-amber-300/70 dark:border-amber-700/60 flex items-center gap-1.5 transition">
+                    <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+                    <span>Simulate Duplicate Alert</span>
+                  </button>
+                </div>
+
+                <!-- Photo Upload & Privacy Blur -->
+                <div class="p-4 rounded-2xl bg-stone-50 dark:bg-slate-800/50 border border-stone-200/80 dark:border-slate-700/80 space-y-3">
+                  <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Profile Photo & Privacy Blur</label>
+                      <p class="text-xs text-slate-500 dark:text-slate-400">Blur photo until you approve a match</p>
+                    </div>
+                    <label class="inline-flex items-center gap-2 cursor-pointer">
+                      <input id="input-privacy-blur" type="checkbox" onchange="updateLivePreview()" class="w-4 h-4 accent-brand-600 rounded" />
+                      <span class="text-xs font-semibold text-slate-700 dark:text-slate-200">Enable Privacy Blur</span>
+                    </label>
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-3 pt-1">
+                    <input type="file" id="photo-upload" accept="image/*" onchange="handlePhotoUpload(event)" class="hidden" />
+                    <label for="photo-upload" class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-stone-100 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold border border-stone-200 dark:border-slate-700 transition">
+                      <i data-lucide="upload-cloud" class="w-4 h-4 text-brand-500"></i>
+                      <span>Upload Photo</span>
+                    </label>
+
+                    <button type="button" id="voice-record-btn" onclick="toggleVoiceRecording()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/50 dark:hover:bg-brand-900/60 text-brand-700 dark:text-brand-300 text-xs font-semibold border border-brand-200 dark:border-brand-800/60 transition">
+                      <i data-lucide="mic" class="w-4 h-4"></i>
+                      <span id="voice-record-label">Record 15s Voice Intro</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Name, Age & Managed By -->
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                  <div class="sm:col-span-5">
+                    <label for="input-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Full Name</label>
+                    <input id="input-name" type="text" value="Aravind Subramanian" oninput="updateLivePreview()" required class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                  </div>
+                  <div class="sm:col-span-2">
+                    <label for="input-age" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Age</label>
+                    <input id="input-age" type="number" min="21" max="65" value="29" oninput="updateLivePreview()" required class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                  </div>
+                  <div class="sm:col-span-5">
+                    <label for="input-managed-by" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Who's Behind Profile?</label>
+                    <select id="input-managed-by" onchange="updateLivePreview()" class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+                      <option value="Self-Managed" selected>Self-Managed Profile</option>
+                      <option value="Co-Managed with Parents">Co-Managed with Parents</option>
+                      <option value="Parent-Managed + Dual-Handshake">Parent-Managed + Dual-Handshake</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Location & Occupation -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label for="input-location" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">City / Hometown (40+ Indian Cities)</label>
+                    <select id="input-location" onchange="updateLivePreview()" class="india-city-select w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                      <option value="Dindigul, Tamil Nadu" selected>Dindigul, Tamil Nadu</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="input-occupation" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Occupation</label>
+                    <input id="input-occupation" type="text" value="Product Architect" oninput="updateLivePreview()" required class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                  </div>
+                </div>
+
+                <!-- Lifestyle & Values -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label for="input-family-pref" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Family Preference</label>
+                    <select id="input-family-pref" onchange="updateLivePreview()" class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500">
+                      <option value="Close-knit Nuclear / Joint Friendly" selected>Nuclear / Joint Friendly</option>
+                      <option value="Joint Family Values">Joint Family Values</option>
+                      <option value="Independent Nuclear">Independent Nuclear</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="input-weekend-vibe" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Weekend Vibe</label>
+                    <select id="input-weekend-vibe" onchange="updateLivePreview()" class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500">
+                      <option value="Filter Coffee & Road Trips" selected>Filter Coffee / Chai & Road Trips</option>
+                      <option value="Heritage Walk & Family Lunch">Heritage Walk & Family Lunch</option>
+                      <option value="Books, Music & Quiet Cafes">Books, Music & Quiet Cafes</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="input-rasi" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Kundali / Rasi / Nakshatra</label>
+                    <input id="input-rasi" type="text" value="Simham / Leo • Magam" oninput="updateLivePreview()" class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                  </div>
+                </div>
+
+                <!-- Sunday Morning Sliders -->
+                <div class="p-4 rounded-2xl bg-gradient-to-br from-amber-50/70 to-brand-50/40 dark:from-slate-800/80 dark:to-slate-800/40 border border-amber-200/70 dark:border-slate-700 space-y-3.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
+                      <i data-lucide="sun" class="w-4 h-4 text-amber-500"></i>
+                      <span>"Sunday Morning" Lifestyle Sliders</span>
+                    </span>
+                    <span class="text-[11px] text-slate-500 dark:text-slate-400">Powers "Why You Two Fit"</span>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                      <span>🌅 Early Riser (6 AM)</span>
+                      <span>🌙 Night Owl (1 AM)</span>
+                    </div>
+                    <input id="slider-riser" type="range" min="1" max="100" value="40" oninput="updateLivePreview()" class="w-full accent-brand-600 cursor-pointer" />
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                      <span>☕ Filter Coffee & Quiet Sundays</span>
+                      <span>⛰️ Spontaneous Road Trips</span>
+                    </div>
+                    <input id="slider-sunday" type="range" min="1" max="100" value="65" oninput="updateLivePreview()" class="w-full accent-amber-500 cursor-pointer" />
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">
+                      <span>💰 Minimalist Saver</span>
+                      <span>✈️ Experience Spender</span>
+                    </div>
+                    <input id="slider-spender" type="range" min="1" max="100" value="68" oninput="updateLivePreview()" class="w-full accent-emerald-600 cursor-pointer" />
+                  </div>
+                </div>
+
+                <!-- Hidden Dealbreakers -->
+                <div class="p-4 rounded-2xl bg-stone-50 dark:bg-slate-800/50 border border-stone-200/80 dark:border-slate-700/80 space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                      <i data-lucide="lock" class="w-3.5 h-3.5 text-brand-500"></i>
+                      <span>Hidden Non-Negotiable Dealbreakers</span>
+                    </span>
+                    <span class="text-[11px] text-slate-400">Never shown publicly</span>
+                  </div>
+                  <div id="dealbreakers-selector" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <!-- Phone & Email -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                  <div>
+                    <label for="input-phone" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                      Verified Mobile <span class="text-emerald-600 dark:text-emerald-400">(Duplicate Guard)</span>
+                    </label>
+                    <input id="input-phone" type="tel" value="+91 98421 55678" oninput="checkForDuplicates()" required class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                  </div>
+                  <div>
+                    <label for="input-email" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                      Account Email <span class="text-emerald-600 dark:text-emerald-400">(Duplicate Guard)</span>
+                    </label>
+                    <input id="input-email" type="email" value="aravind.s@mythunai.in" oninput="checkForDuplicates()" required class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                  </div>
+                </div>
+
+                <!-- Bio -->
+                <div>
+                  <label for="input-bio" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">About Me (Bio)</label>
+                  <textarea id="input-bio" rows="3" oninput="updateLivePreview()" class="w-full bg-stone-50 dark:bg-slate-800/80 border border-stone-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">Born in Dindigul, building products across Bengaluru & Chennai. Passionate about Indian classical fusion, weekend road trips, and finding a thoughtful partner who values warmth and humor.</textarea>
+                </div>
+
+                <!-- Interests -->
+                <div>
+                  <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Pan-India Cultural & Lifestyle Interests (Up to 6)</label>
+                  <div id="interest-selector" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="pt-2 flex items-center justify-end gap-3">
+                  <button type="submit" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-600 to-rose-500 hover:from-brand-700 hover:to-rose-600 text-white font-semibold text-sm shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2 transition active:scale-95">
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                    <span>Save & Verify Profile</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-stone-200 dark:border-slate-800 flex items-center justify-around py-2 px-1">
+      <button onclick="switchTab('discover')" data-tab="discover" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-xs font-semibold">
+        <i data-lucide="sparkles" class="w-5 h-5"></i>
+        <span>Discover</span>
+      </button>
+      <button onclick="switchTab('matches')" data-tab="matches" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-xs font-semibold relative">
+        <i data-lucide="message-circle-heart" class="w-5 h-5"></i>
+        <span>Matches</span>
+        <span id="mobile-match-badge" class="absolute top-0.5 right-2 w-4 h-4 text-[10px] rounded-full bg-brand-600 text-white flex items-center justify-center font-bold">2</span>
+      </button>
+      <button onclick="switchTab('copilot')" data-tab="copilot" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-xs font-semibold relative">
+        <i data-lucide="users" class="w-5 h-5"></i>
+        <span>Co-Pilot</span>
+        <span id="mobile-copilot-badge" class="absolute top-0.5 right-2 w-4 h-4 text-[10px] rounded-full bg-amber-500 text-white flex items-center justify-center font-bold">2</span>
+      </button>
+      <button onclick="switchTab('profile')" data-tab="profile" class="mobile-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-xs font-semibold">
+        <i data-lucide="user-check" class="w-5 h-5"></i>
+        <span>Profile</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ==================== MUTUAL MATCH CELEBRATION MODAL ==================== -->
+  <div id="match-modal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl animate-modal-pop relative overflow-hidden">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 text-xs font-bold uppercase tracking-wider mb-3">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        <span>Mutual Connection</span>
+      </div>
+
+      <h2 class="font-display font-extrabold text-2xl sm:text-3xl bg-gradient-to-r from-brand-600 to-amber-500 bg-clip-text text-transparent">
+        It’s a Thunai Match!
+      </h2>
+      <p id="modal-match-subtitle" class="text-sm text-slate-600 dark:text-slate-300 mt-1.5">
+        You and Meera both expressed interest in each other.
+      </p>
+
+      <div class="flex items-center justify-center my-6">
+        <img id="modal-user-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" alt="You" class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-lg -mr-3 z-10" />
+        <div class="w-10 h-10 rounded-full bg-brand-600 text-white flex items-center justify-center shadow-md z-20 border-2 border-white dark:border-slate-900">
+          <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
+        </div>
+        <img id="modal-partner-img" src="" alt="Match" class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-lg -ml-3 z-10" />
+      </div>
+
+      <div class="space-y-2.5">
+        <button onclick="jumpToMatchedChat()" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-brand-600 to-rose-500 hover:from-brand-700 hover:to-rose-600 text-white font-semibold text-sm shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2 transition">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span>Unlock 3-Question Icebreaker</span>
+        </button>
+        <button onclick="closeMatchModal()" class="w-full py-3 px-5 rounded-2xl bg-stone-100 hover:bg-stone-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-sm transition">
+          Keep Discovering
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SAFETY / BLOCK / REPORT MODAL ==================== -->
+  <div id="safety-modal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl animate-modal-pop">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2 text-rose-600 dark:text-rose-400">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          <h3 class="font-display font-bold text-lg">Safety & Trust Controls</h3>
+        </div>
+        <button onclick="closeSafetyModal()" class="p-1 rounded-lg text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-4">
+        Your safety comes first. Choose an action below—the member will not be notified if you unmatch or report.
+      </p>
+
+      <div class="space-y-2.5 mb-5">
+        <button onclick="executeSafetyAction('unmatch')" class="w-full text-left p-3.5 rounded-2xl border border-stone-200 dark:border-slate-700 hover:bg-stone-50 dark:hover:bg-slate-800 transition flex items-center justify-between">
+          <div>
+            <div class="font-semibold text-sm text-slate-900 dark:text-white">Unmatch & Remove Conversation</div>
+            <div class="text-xs text-slate-500">Quietly remove this match from your list</div>
+          </div>
+          <i data-lucide="user-minus" class="w-4 h-4 text-slate-400"></i>
+        </button>
+
+        <button onclick="executeSafetyAction('report')" class="w-full text-left p-3.5 rounded-2xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/50 dark:bg-rose-950/30 hover:bg-rose-100/60 transition flex items-center justify-between">
+          <div>
+            <div class="font-semibold text-sm text-rose-700 dark:text-rose-300">Block & Report Profile</div>
+            <div class="text-xs text-rose-600/80 dark:text-rose-400">Flag suspicious behavior, fake info, or harassment</div>
+          </div>
+          <i data-lucide="flag" class="w-4 h-4 text-rose-600"></i>
+        </button>
+      </div>
+
+      <button onclick="closeSafetyModal()" class="w-full py-2.5 rounded-xl bg-stone-100 dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== THUNAI COFFEE SPOTS SAFE MEETUP PLANNER MODAL ==================== -->
+  <div id="coffee-modal" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-modal-pop max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+          <i data-lucide="coffee" class="w-5 h-5"></i>
+          <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white">Thunai Verified Coffee Spots</h3>
+        </div>
+        <button onclick="closeCoffeeModal()" class="p-1.5 rounded-xl text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
+        Curated, well-lit public cafes ideal for a relaxed 45-minute first meeting.
+      </p>
+
+      <div class="flex items-center gap-2 mb-4">
+        <label for="coffee-city-select" class="text-xs font-semibold text-slate-600 dark:text-slate-300">Select Indian City:</label>
+        <select id="coffee-city-select" onchange="renderCoffeeSpots()" class="flex-1 bg-stone-50 dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-semibold"></select>
+      </div>
+
+      <div id="coffee-spots-list" class="space-y-2.5 mb-4"></div>
+
+      <div class="p-3.5 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-between gap-3">
+        <div>
+          <div class="text-xs font-bold text-emerald-900 dark:text-emerald-200 flex items-center gap-1.5">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+            <span>Trusted Contact Safety Check-In</span>
+          </div>
+          <p class="text-[11px] text-emerald-700 dark:text-emerald-400 mt-0.5">
+            Auto-share cafe location & 45-min check-in ping with Lakshmi (Mother)
+          </p>
+        </div>
+        <input id="coffee-safety-checkin" type="checkbox" checked class="w-4 h-4 accent-emerald-600 rounded shrink-0" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    const DEFAULT_SUPABASE_URL = 'https://jblobcjrqudndhbhptcr.supabase.co';
+    const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_6BfZUIEZ8POEimc-TPI18w_e6Bax9Cp';
+    const STORAGE_KEY = 'mythunai_app_state_v5_prod';
+    let supabaseClient = null;
+    let currentSupabaseUser = null;
+    let realtimeMessageChannel = null;
+    let currentAuthMode = 'supabase';
+
+    const INDIA_CITIES_BY_REGION = {
+      "South India": [
+        { city: "Bengaluru", state: "Karnataka", label: "Bengaluru, Karnataka" },
+        { city: "Chennai", state: "Tamil Nadu", label: "Chennai, Tamil Nadu" },
+        { city: "Hyderabad", state: "Telangana", label: "Hyderabad, Telangana" },
+        { city: "Coimbatore", state: "Tamil Nadu", label: "Coimbatore, Tamil Nadu" },
+        { city: "Madurai", state: "Tamil Nadu", label: "Madurai, Tamil Nadu" },
+        { city: "Dindigul", state: "Tamil Nadu", label: "Dindigul, Tamil Nadu" },
+        { city: "Kochi", state: "Kerala", label: "Kochi, Kerala" },
+        { city: "Thiruvananthapuram", state: "Kerala", label: "Thiruvananthapuram, Kerala" },
+        { city: "Mysuru", state: "Karnataka", label: "Mysuru, Karnataka" },
+        { city: "Visakhapatnam", state: "Andhra Pradesh", label: "Visakhapatnam, Andhra Pradesh" },
+        { city: "Tiruchirappalli", state: "Tamil Nadu", label: "Tiruchirappalli, Tamil Nadu" }
+      ],
+      "West & Central India": [
+        { city: "Mumbai", state: "Maharashtra", label: "Mumbai, Maharashtra" },
+        { city: "Pune", state: "Maharashtra", label: "Pune, Maharashtra" },
+        { city: "Ahmedabad", state: "Gujarat", label: "Ahmedabad, Gujarat" },
+        { city: "Surat", state: "Gujarat", label: "Surat, Gujarat" },
+        { city: "Nagpur", state: "Maharashtra", label: "Nagpur, Maharashtra" },
+        { city: "Indore", state: "Madhya Pradesh", label: "Indore, Madhya Pradesh" },
+        { city: "Bhopal", state: "Madhya Pradesh", label: "Bhopal, Madhya Pradesh" },
+        { city: "Goa", state: "Goa", label: "Panaji, Goa" },
+        { city: "Vadodara", state: "Gujarat", label: "Vadodara, Gujarat" }
+      ],
+      "North India": [
+        { city: "Delhi NCR", state: "Delhi", label: "Delhi NCR" },
+        { city: "Gurugram", state: "Haryana", label: "Gurugram, Haryana" },
+        { city: "Noida", state: "Uttar Pradesh", label: "Noida, Uttar Pradesh" },
+        { city: "Jaipur", state: "Rajasthan", label: "Jaipur, Rajasthan" },
+        { city: "Chandigarh", state: "Chandigarh", label: "Chandigarh" },
+        { city: "Lucknow", state: "Uttar Pradesh", label: "Lucknow, Uttar Pradesh" },
+        { city: "Dehradun", state: "Uttarakhand", label: "Dehradun, Uttarakhand" },
+        { city: "Amritsar", state: "Punjab", label: "Amritsar, Punjab" },
+        { city: "Udaipur", state: "Rajasthan", label: "Udaipur, Rajasthan" }
+      ],
+      "East & Northeast India": [
+        { city: "Kolkata", state: "West Bengal", label: "Kolkata, West Bengal" },
+        { city: "Bhubaneswar", state: "Odisha", label: "Bhubaneswar, Odisha" },
+        { city: "Guwahati", state: "Assam", label: "Guwahati, Assam" },
+        { city: "Patna", state: "Bihar", label: "Patna, Bihar" },
+        { city: "Ranchi", state: "Jharkhand", label: "Ranchi, Jharkhand" },
+        { city: "Shillong", state: "Meghalaya", label: "Shillong, Meghalaya" }
+      ]
+    };
+
+    const ALL_INDIA_CITIES_FLAT = Object.entries(INDIA_CITIES_BY_REGION).flatMap(([region, cities]) =>
+      cities.map(c => ({ ...c, region }))
+    );
+
+    const QUICK_PILL_CITIES = [
+      { label: "🇮🇳 All India", value: "all" },
+      { label: "Mumbai", value: "Mumbai" },
+      { label: "Delhi NCR", value: "Delhi NCR" },
+      { label: "Bengaluru", value: "Bengaluru" },
+      { label: "Chennai", value: "Chennai" },
+      { label: "Hyderabad", value: "Hyderabad" },
+      { label: "Pune", value: "Pune" },
+      { label: "Kolkata", value: "Kolkata" },
+      { label: "Jaipur", value: "Jaipur" },
+      { label: "Kochi", value: "Kochi" },
+      { label: "Coimbatore", value: "Coimbatore" },
+      { label: "Dindigul", value: "Dindigul" }
+    ];
+
+    const ALL_INTERESTS = [
+      "Filter Coffee & Chai ☕",
+      "Carnatic & Hindustani 🎶",
+      "Festive Traditions 🪔",
+      "Weekend Road Trips 🚗",
+      "Culinary Exploration 🍛",
+      "Books & Literature 📚",
+      "Fitness & Yoga 🧘",
+      "Indian Cinema 🎬",
+      "Startup & Tech 💡",
+      "Himalayan Treks 🏔️"
+    ];
+
+    const ALL_DEALBREAKERS = [
+      "Non-Smoker",
+      "Open to Relocation",
+      "Equal Career Support",
+      "Family-Oriented",
+      "Vegetarian / Eggetarian",
+      "Financially Independent"
+    ];
+
+    let selectedInterests = [
+      "Filter Coffee & Chai ☕",
+      "Carnatic & Hindustani 🎶",
+      "Weekend Road Trips 🚗",
+      "Startup & Tech 💡"
+    ];
+
+    let selectedDealbreakers = [
+      "Non-Smoker",
+      "Equal Career Support"
+    ];
+
+    const EXISTING_MEMBER_RECORDS = [
+      { name: "meera krishnamurthy", phone: "9840011223", email: "meera@mythunai.in" },
+      { name: "ananya deshmukh", phone: "9820199887", email: "ananya.d@mythunai.in" }
+    ];
+
+    const THREE_QUESTION_DECK = [
+      {
+        id: "q1",
+        question: "What does an ideal balanced partnership look like to you?",
+        myDefault: "Being best friends first—supporting each other's ambitions while keeping Sunday mornings slow and family-centered.",
+        partnerAnswer: "Mutual respect, open humor during stressful weeks, and building a warm home where both families feel cherished."
+      },
+      {
+        id: "q2",
+        question: "Which Indian family tradition do you definitely want to carry forward?",
+        myDefault: "Gathering the whole family for festive mornings—filter coffee, traditional breakfast, and unhurried conversations.",
+        partnerAnswer: "Celebrating Diwali, Pongal, and milestone birthdays together without phones at the dining table!"
+      },
+      {
+        id: "q3",
+        question: "How do you like to recharge after a busy work week?",
+        myDefault: "A scenic early morning drive, good regional music, and trying out a cozy local café.",
+        partnerAnswer: "Morning yoga, a long bookstore browse, and cooking a comforting meal at home."
+      }
+    ];
+
+    const THUNAI_COFFEE_SPOTS = {
+      "Mumbai": [
+        { name: "Subko Specialty Coffee, Bandra West", vibe: "Heritage courtyard • Warm, relaxed daytime vibe", rating: "4.9★ Verified Spot" },
+        { name: "Prithvi Cafe, Juhu", vibe: "Open-air bamboo garden • Iconic cultural energy", rating: "4.8★ Verified Spot" }
+      ],
+      "Delhi NCR": [
+        { name: "Blue Tokai Roasters, Khan Market", vibe: "Bright & central • Easy metro access", rating: "4.8★ Verified Spot" },
+        { name: "Ama Cafe, Majnu Ka Tilla / SDA", vibe: "Cozy seating • Great for 45-min conversations", rating: "4.7★ Verified Spot" }
+      ],
+      "Bengaluru": [
+        { name: "Third Wave Coffee, Indiranagar 12th Main", vibe: "Spacious & well-lit • Prime central location", rating: "4.9★ Verified Spot" },
+        { name: "Matteo Coffea, Church Street", vibe: "Classic Bengaluru meetup hub • Safe & lively", rating: "4.8★ Verified Spot" }
+      ],
+      "Chennai": [
+        { name: "Amethyst Cafe, Royapettah", vibe: "Lush garden veranda • Quiet & refined", rating: "4.9★ Verified Spot" },
+        { name: "Writers' Cafe, Gopalapuram", vibe: "Book-lined social enterprise cafe • Warm ambience", rating: "4.8★ Verified Spot" }
+      ],
+      "Hyderabad": [
+        { name: "Roastery Coffee House, Banjara Hills", vibe: "Bungalow courtyard • Peaceful & welcoming", rating: "4.9★ Verified Spot" },
+        { name: "Autumn Leaf Cafe, Jubilee Hills", vibe: "Tree-shaded garden • Great afternoon coffee", rating: "4.8★ Verified Spot" }
+      ],
+      "Pune": [
+        { name: "Bai Mu Dan, Koregaon Park", vibe: "Serene garden cafe • Ideal for thoughtful talks", rating: "4.9★ Verified Spot" }
+      ],
+      "Kolkata": [
+        { name: "Roastery Coffee House, Hindustan Park", vibe: "Heritage South Kolkata bungalow • Warm & safe", rating: "4.9★ Verified Spot" }
+      ],
+      "Jaipur": [
+        { name: "Tapri Central, C-Scheme", vibe: "Rooftop views & masala chai • Vibrant & safe", rating: "4.9★ Verified Spot" }
+      ],
+      "Kochi": [
+        { name: "Kashi Art Cafe, Fort Kochi", vibe: "Art gallery courtyard • Relaxed coastal charm", rating: "4.9★ Verified Spot" }
+      ],
+      "Coimbatore": [
+        { name: "The French Door Cafe, RS Puram", vibe: "Heritage bungalow • Calm & family-approved", rating: "4.8★ Verified Spot" }
+      ],
+      "Dindigul": [
+        { name: "Venu Biriyani & Heritage Lounge, Dindigul Central", vibe: "Well-lit central dining & coffee lounge", rating: "4.8★ Verified Spot" }
+      ]
+    };
+
+    let discoverProfiles = [
+      {
+        id: "p_meera",
+        name: "Meera Krishnamurthy",
+        age: 27,
+        city: "Chennai",
+        region: "South India",
+        location: "Chennai, Tamil Nadu",
+        languages: "Tamil • English • Hindi",
+        profession: "UX Design Lead",
+        education: "NID Ahmedabad",
+        verified: true,
+        trustTier: "Blue + Gold Verified",
+        managedBy: "Self-Managed",
+        compatibility: 96,
+        porutham: "29/36 Gunas • 8.5/10 Porutham",
+        photoBlurred: false,
+        photoUnlocked: true,
+        mutual: true,
+        voicePrompt: "My ideal Sunday morning in Chennai...",
+        voiceDuration: "0:15",
+        whyYouFit: [
+          "Both value equal career support & close-knit family bonds",
+          "94% Sunday Morning rhythm overlap (Filter coffee + road trips)",
+          "High Kundali & Porutham alignment"
+        ],
+        values: {
+          weekend: "Mylapore filter coffee & coastal drives",
+          family: "Close-knit Nuclear / Joint Friendly",
+          relocation: "Chennai / Bengaluru"
+        },
+        avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+        bio: "Carnatic vocalist by morning, design systems lead by day. Looking for someone kind, grounded, and excited to explore India together.",
+        interests: ["Filter Coffee & Chai ☕", "Carnatic & Hindustani 🎶", "Books & Literature 📚", "Weekend Road Trips 🚗"],
+        aiReplies: [
+          "Vanakkam Aravind! Filter coffee at Mylapore followed by an ECR drive wins every single time ☕",
+          "I love that you're from Dindigul—my cousins swear by Dindigul hospitality! How's your week going?"
+        ]
+      },
+      {
+        id: "p_ananya",
+        name: "Ananya Deshmukh",
+        age: 28,
+        city: "Mumbai",
+        region: "West & Central India",
+        location: "Mumbai, Maharashtra",
+        languages: "Marathi • Hindi • English",
+        profession: "Fintech Product Manager",
+        education: "IIM Kozhikode",
+        verified: true,
+        trustTier: "Blue + Gold Verified",
+        managedBy: "Co-Managed with Parents",
+        compatibility: 94,
+        porutham: "30/36 Gunas",
+        photoBlurred: true,
+        photoUnlocked: false,
+        mutual: true,
+        voicePrompt: "Why I believe in slow, intentional matchmaking...",
+        voiceDuration: "0:14",
+        whyYouFit: [
+          "Both work in Product & value financial independence",
+          "Co-Managed profile with verified dual-handshake",
+          "Shared love for Sahyadri & Western Ghats weekend drives"
+        ],
+        values: {
+          weekend: "Marine Drive sunrise & Lonavala treks",
+          family: "Warm Modern Nuclear",
+          relocation: "Mumbai / Bengaluru / Pune"
+        },
+        avatar: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=800&q=80",
+        bio: "Born in Pune, building consumer fintech in Mumbai. Equally happy at a classical concert or hiking in the Western Ghats.",
+        interests: ["Startup & Tech 💡", "Himalayan Treks 🏔️", "Culinary Exploration 🍛", "Fitness & Yoga 🧘"],
+        aiReplies: [
+          "Namaste Aravind! So glad you requested a photo preview—transparency makes this so much more comfortable 😊",
+          "Have you ever trekked in the Western Ghats during monsoon? Would love to swap travel stories!"
+        ]
+      },
+      {
+        id: "p_kavya",
+        name: "Kavya Menon",
+        age: 28,
+        city: "Bengaluru",
+        region: "South India",
+        location: "Bengaluru, Karnataka",
+        languages: "Malayalam • Tamil • English • Hindi",
+        profession: "Clinical Psychologist",
+        education: "Christ University",
+        verified: true,
+        trustTier: "Blue + Gold Verified",
+        managedBy: "Self-Managed",
+        compatibility: 95,
+        porutham: "28/36 Gunas • 8/10 Porutham",
+        photoBlurred: false,
+        photoUnlocked: true,
+        mutual: true,
+        voicePrompt: "One thing that always makes me smile...",
+        voiceDuration: "0:15",
+        whyYouFit: [
+          "Complementary communication & emotional warmth",
+          "Both enjoy Coorg/Kodaikanal hill getaways",
+          "Aligned on family traditions & career growth"
+        ],
+        values: {
+          weekend: "Cubbon Park walks & indie bookstores",
+          family: "Close-knit Nuclear / Joint Friendly",
+          relocation: "Bengaluru / Kochi / Chennai"
+        },
+        avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+        bio: "Believer in deep conversations, Onam sadhyas, and building a life full of empathy and laughter.",
+        interests: ["Books & Literature 📚", "Festive Traditions 🪔", "Filter Coffee & Chai ☕", "Fitness & Yoga 🧘"],
+        aiReplies: [
+          "Hello Aravind! Thank you for connecting—your bio felt super genuine and warm.",
+          "Kodaikanal and Munnar are my favorite weekend escapes! When did you visit last?"
+        ]
+      },
+      {
+        id: "p_arushi",
+        name: "Arushi Sharma",
+        age: 27,
+        city: "Delhi NCR",
+        region: "North India",
+        location: "Delhi NCR",
+        languages: "Hindi • Punjabi • English",
+        profession: "Architect & Heritage Restorer",
+        education: "SPA New Delhi",
+        verified: true,
+        trustTier: "Blue + Gold Verified",
+        managedBy: "Self-Managed",
+        compatibility: 92,
+        porutham: "27/36 Gunas",
+        photoBlurred: false,
+        photoUnlocked: true,
+        mutual: true,
+        voicePrompt: "Favorite Indian city for architecture & food...",
+        voiceDuration: "0:15",
+        whyYouFit: [
+          "Creative + Product mindset synergy",
+          "Both value heritage, travel & family festivals",
+          "Open to pan-India metro relocation"
+        ],
+        values: {
+          weekend: "Lodhi Garden mornings & Jaipur drives",
+          family: "Close-knit Nuclear / Joint Friendly",
+          relocation: "Delhi NCR / Bengaluru / Mumbai"
+        },
+        avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+        bio: "Restoring heritage havelis by day, hunting for the best filter coffee and adrak chai across India by weekend.",
+        interests: ["Festive Traditions 🪔", "Himalayan Treks 🏔️", "Indian Cinema 🎬", "Culinary Exploration 🍛"],
+        aiReplies: [
+          "Namaste Aravind! I've always wanted to explore the Chettinad and Madurai temple architecture in Tamil Nadu!",
+          "Filter coffee vs. adrak chai is a tough debate—why not both? 😄"
+        ]
+      }
+    ];
+
+    let filteredQueue = [...discoverProfiles];
+    let currentCardIndex = 0;
+    let playingAudioId = null;
+    let audioTimer = null;
+    let isRecordingVoice = false;
+
+    let mutualMatches = [
+      {
+        id: "m_priya",
+        name: "Priya Venkatesh",
+        age: 27,
+        city: "Coimbatore",
+        location: "Coimbatore, Tamil Nadu",
+        profession: "Data Scientist",
+        compatibility: 95,
+        online: true,
+        qaUnlocked: false,
+        qaSummary: [],
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+        messages: [
+          {
+            sender: "them",
+            text: "Vanakkam Aravind! Complete our 3-Question Mutual Icebreaker above so both our answers reveal at once!",
+            time: "10:15 AM"
+          }
+        ],
+        aiReplies: [
+          "That's such a thoughtful perspective! I feel the exact same way about balancing family and career.",
+          "Coimbatore to Dindigul is such an easy drive—have you been to Pollachi recently?"
+        ]
+      },
+      {
+        id: "m_ritika",
+        name: "Ritika Chatterjee",
+        age: 28,
+        city: "Kolkata",
+        location: "Kolkata, West Bengal",
+        profession: "Editorial Producer",
+        compatibility: 93,
+        online: true,
+        qaUnlocked: true,
+        qaSummary: [
+          {
+            q: "What does an ideal balanced partnership look like to you?",
+            me: "Being best friends first—supporting each other's ambitions while keeping Sunday mornings slow.",
+            them: "Laughing over morning tea, respecting each other's creative space, and standing by family."
+          }
+        ],
+        messages: [
+          {
+            sender: "them",
+            text: "Namaskar Aravind! Loved your answer on Sunday mornings—South Indian filter coffee + Bengali adda is an elite combo ☕",
+            time: "Yesterday"
+          }
+        ],
+        aiReplies: [
+          "I've visited Bengaluru and Chennai for work—South Indian breakfast is unmatched!",
+          "Would love to hop on a quick 10-min Vibe Call this weekend if you're free!"
+        ]
+      }
+    ];
+
+    let activeChatId = mutualMatches[0].id;
+    let latestMatchedProfile = null;
+
+    let coPilotMembers = [
+      { id: "cp_1", name: "Lakshmi Subramanian", role: "Mother", status: "Active", permissions: "Shortlist Only" },
+      { id: "cp_2", name: "Karthik Subramanian", role: "Sibling", status: "Active", permissions: "Shortlist Only" }
+    ];
+
+    let coPilotShortlists = [
+      {
+        id: "sl_1",
+        suggestedBy: "Lakshmi (Mother)",
+        note: "Very warm family background from Madurai, working in Bengaluru. Thought you two would have great conversations!",
+        profile: {
+          id: "p_divya",
+          name: "Divya Sundaram",
+          age: 27,
+          profession: "Pediatrician",
+          location: "Bengaluru, Karnataka",
+          compatibility: 95,
+          porutham: "29/36 Gunas • 8.5/10 Porutham",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
+        }
+      },
+      {
+        id: "sl_2",
+        suggestedBy: "Karthik (Brother)",
+        note: "Fellow product builder in Pune—both of you love Himalayan treks and specialty coffee.",
+        profile: {
+          id: "p_sneha",
+          name: "Sneha Kulkarni",
+          age: 28,
+          profession: "Senior Product Designer",
+          location: "Pune, Maharashtra",
+          compatibility: 93,
+          porutham: "28/36 Gunas",
+          avatar: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=800&q=80"
+        }
+      }
+    ];
+
+    function populatePanIndiaCities() {
+      const datalist = document.getElementById('all-india-cities-datalist');
+      const discoverSelect = document.getElementById('city-filter');
+      const coffeeSelect = document.getElementById('coffee-city-select');
+      const quickPills = document.getElementById('quick-city-pills');
+
+      if (datalist) {
+        datalist.innerHTML = ALL_INDIA_CITIES_FLAT.map(c => `<option value="${c.city}">${c.label}</option>`).join('');
+      }
+
+      if (discoverSelect) {
+        let html = `<option value="all">🇮🇳 All India (40+ Cities)</option>`;
+        Object.entries(INDIA_CITIES_BY_REGION).forEach(([region, cities]) => {
+          html += `<optgroup label="${region}">`;
+          cities.forEach(c => {
+            html += `<option value="${c.city}">${c.label}</option>`;
+          });
+          html += `</optgroup>`;
+        });
+        discoverSelect.innerHTML = html;
+      }
+
+      document.querySelectorAll('.india-city-select').forEach(sel => {
+        const currentVal = sel.value || "Dindigul, Tamil Nadu";
+        let html = '';
+        Object.entries(INDIA_CITIES_BY_REGION).forEach(([region, cities]) => {
+          html += `<optgroup label="${region}">`;
+          cities.forEach(c => {
+            html += `<option value="${c.label}" ${c.label === currentVal ? 'selected' : ''}>${c.label}</option>`;
+          });
+          html += `</optgroup>`;
+        });
+        sel.innerHTML = html;
+      });
+
+      if (coffeeSelect) {
+        coffeeSelect.innerHTML = ALL_INDIA_CITIES_FLAT.map(c =>
+          `<option value="${c.city}">${c.label}</option>`
+        ).join('');
+      }
+
+      if (quickPills) {
+        quickPills.innerHTML = QUICK_PILL_CITIES.map(pill => `
+          <button type="button" data-city-pill="${pill.value}" onclick="selectDiscoverCity('${pill.value}')" class="city-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold border transition ${
+            pill.value === 'all'
+              ? 'bg-brand-600 text-white border-brand-600'
+              : 'bg-stone-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-brand-400'
+          }">
+            ${pill.label}
+          </button>
+        `).join('');
+      }
+    }
+
+    function selectDiscoverCity(cityVal) {
+      const selectEl = document.getElementById('city-filter');
+      const searchEl = document.getElementById('city-search-input');
+      if (selectEl) {
+        const matchingOpt = Array.from(selectEl.options).find(o => o.value.toLowerCase() === cityVal.toLowerCase());
+        selectEl.value = matchingOpt ? matchingOpt.value : 'all';
+      }
+      if (searchEl) {
+        searchEl.value = cityVal === 'all' ? '' : cityVal;
+      }
+      document.querySelectorAll('.city-pill').forEach(btn => {
+        const isActive = btn.dataset.cityPill.toLowerCase() === cityVal.toLowerCase();
+        btn.className = isActive
+          ? 'city-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold border transition bg-brand-600 text-white border-brand-600'
+          : 'city-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold border transition bg-stone-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-brand-400';
+      });
+      filterProfiles(cityVal);
+    }
+
+    function handleCitySearchInput(val) {
+      const trimmed = val.trim();
+      document.querySelectorAll('.city-pill').forEach(btn => {
+        const isActive = (!trimmed && btn.dataset.cityPill === 'all') ||
+          btn.dataset.cityPill.toLowerCase() === trimmed.toLowerCase();
+        btn.className = isActive
+          ? 'city-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold border transition bg-brand-600 text-white border-brand-600'
+          : 'city-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold border transition bg-stone-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-brand-400';
+      });
+      filterProfiles(trimmed || 'all');
+    }
+
+    async function sha256Hex(str) {
+      const normalized = (str || '').trim().toLowerCase();
+      if (!normalized || !window.crypto?.subtle) return null;
+      const msgBuffer = new TextEncoder().encode(normalized);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function saveState() {
+      try {
+        const snapshot = {
+          theme: document.documentElement.classList.contains('dark') ? 'dark' : 'light',
+          authMode: currentAuthMode,
+          profile: {
+            name: document.getElementById('input-name')?.value || 'Aravind Subramanian',
+            age: document.getElementById('input-age')?.value || '29',
+            managedBy: document.getElementById('input-managed-by')?.value || 'Self-Managed',
+            location: document.getElementById('input-location')?.value || 'Dindigul, Tamil Nadu',
+            occupation: document.getElementById('input-occupation')?.value || 'Product Architect',
+            familyPref: document.getElementById('input-family-pref')?.value || 'Close-knit Nuclear / Joint Friendly',
+            weekendVibe: document.getElementById('input-weekend-vibe')?.value || 'Filter Coffee & Road Trips',
+            rasi: document.getElementById('input-rasi')?.value || 'Simham / Leo • Magam',
+            sliderRiser: document.getElementById('slider-riser')?.value || '40',
+            sliderSunday: document.getElementById('slider-sunday')?.value || '65',
+            sliderSpender: document.getElementById('slider-spender')?.value || '68',
+            phone: document.getElementById('input-phone')?.value || '+91 98421 55678',
+            email: document.getElementById('input-email')?.value || 'aravind.s@mythunai.in',
+            bio: document.getElementById('input-bio')?.value || '',
+            privacyBlur: document.getElementById('input-privacy-blur')?.checked || false,
+            avatar: document.getElementById('preview-avatar')?.src || ''
+          },
+          selectedInterests,
+          selectedDealbreakers,
+          mutualMatches,
+          coPilotMembers,
+          coPilotShortlists
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+      } catch (err) {
+        console.warn('Could not save state to localStorage:', err);
+      }
+    }
+
+    function loadPersistedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+
+        if (data.theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        }
+        updateThemeIcons();
+
+        if (data.profile) {
+          const p = data.profile;
+          if (document.getElementById('input-name')) document.getElementById('input-name').value = p.name;
+          if (document.getElementById('input-age')) document.getElementById('input-age').value = p.age;
+          if (document.getElementById('input-managed-by')) document.getElementById('input-managed-by').value = p.managedBy;
+          if (document.getElementById('input-location')) document.getElementById('input-location').value = p.location;
+          if (document.getElementById('input-occupation')) document.getElementById('input-occupation').value = p.occupation;
+          if (document.getElementById('input-family-pref')) document.getElementById('input-family-pref').value = p.familyPref;
+          if (document.getElementById('input-weekend-vibe')) document.getElementById('input-weekend-vibe').value = p.weekendVibe;
+          if (document.getElementById('input-rasi')) document.getElementById('input-rasi').value = p.rasi;
+          if (document.getElementById('slider-riser')) document.getElementById('slider-riser').value = p.sliderRiser;
+          if (document.getElementById('slider-sunday')) document.getElementById('slider-sunday').value = p.sliderSunday;
+          if (document.getElementById('slider-spender')) document.getElementById('slider-spender').value = p.sliderSpender;
+          if (document.getElementById('input-phone')) document.getElementById('input-phone').value = p.phone;
+          if (document.getElementById('input-email')) document.getElementById('input-email').value = p.email;
+          if (document.getElementById('input-bio')) document.getElementById('input-bio').value = p.bio;
+          if (document.getElementById('input-privacy-blur')) document.getElementById('input-privacy-blur').checked = !!p.privacyBlur;
+          if (p.avatar && document.getElementById('preview-avatar')) {
+            document.getElementById('preview-avatar').src = p.avatar;
+          }
+        }
+
+        if (Array.isArray(data.selectedInterests)) selectedInterests = data.selectedInterests;
+        if (Array.isArray(data.selectedDealbreakers)) selectedDealbreakers = data.selectedDealbreakers;
+        if (Array.isArray(data.mutualMatches) && data.mutualMatches.length) {
+          mutualMatches = data.mutualMatches;
+          activeChatId = mutualMatches[0].id;
+        }
+        if (Array.isArray(data.coPilotMembers)) coPilotMembers = data.coPilotMembers;
+        if (Array.isArray(data.coPilotShortlists)) coPilotShortlists = data.coPilotShortlists;
+      } catch (err) {
+        console.warn('Error restoring persisted state:', err);
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      const colors = {
+        success: 'bg-emerald-600 text-white border-emerald-500',
+        warning: 'bg-amber-500 text-slate-950 border-amber-400',
+        error: 'bg-rose-600 text-white border-rose-500',
+        info: 'bg-slate-900 text-white border-slate-700'
+      };
+      toast.className = `pointer-events-auto px-4 py-3 rounded-2xl border shadow-xl text-xs sm:text-sm font-semibold flex items-center gap-2 animate-card-enter ${colors[type] || colors.info}`;
+      toast.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 shrink-0"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      lucide.createIcons();
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3400);
+    }
+
+    function updateThemeIcons() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const sunIcon = document.getElementById('theme-icon-light');
+      const moonIcon = document.getElementById('theme-icon-dark');
+      if (sunIcon && moonIcon) {
+        sunIcon.classList.toggle('hidden', isDark);
+        moonIcon.classList.toggle('hidden', !isDark);
+      }
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      html.classList.toggle('light', !isDark);
+      updateThemeIcons();
+      saveState();
+      lucide.createIcons();
+    }
+
+    function setAuthMode(mode) {
+      currentAuthMode = mode;
+      const supaBtn = document.getElementById('auth-mode-supa-btn');
+      const demoBtn = document.getElementById('auth-mode-demo-btn');
+      const credBox = document.getElementById('supabase-credentials-box');
+      const submitBtn = document.getElementById('auth-submit-btn');
+
+      if (mode === 'supabase') {
+        supaBtn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm transition';
+        demoBtn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-400 transition';
+        if (credBox) credBox.classList.remove('hidden');
+        if (submitBtn) submitBtn.innerHTML = '<i data-lucide="shield-check" class="w-4 h-4"></i><span>Sign In & Sync Live Database</span>';
+      } else {
+        demoBtn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm transition';
+        supaBtn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-400 transition';
+        if (credBox) credBox.classList.add('hidden');
+        if (submitBtn) submitBtn.innerHTML = '<i data-lucide="zap" class="w-4 h-4"></i><span>Launch Instant Demo Mode</span>';
+      }
+      lucide.createIcons();
+    }
+
+    async function syncProfileToSupabase(profilePayload) {
+      if (!supabaseClient || !currentSupabaseUser) return;
+      try {
+        const cityMeta = ALL_INDIA_CITIES_FLAT.find(c => c.label === profilePayload.location) || {
+          city: profilePayload.location.split(',')[0].trim(),
+          state: 'India',
+          region: 'South India'
+        };
+        const phoneHash = await sha256Hex(profilePayload.phone);
+        const emailHash = await sha256Hex(profilePayload.email);
+
+        const { error } = await supabaseClient.from('profiles').upsert({
+          id: currentSupabaseUser.id,
+          full_name: profilePayload.name,
+          age: parseInt(profilePayload.age, 10) || 29,
+          city: cityMeta.city,
+          state: cityMeta.state,
+          region: cityMeta.region,
+          profession: profilePayload.occupation,
+          bio: profilePayload.bio,
+          managed_by: profilePayload.managedBy,
+          blue_verified: true,
+          gold_verified: true,
+          photo_blur_enabled: !!profilePayload.privacyBlur,
+          family_preference: profilePayload.familyPref,
+          weekend_vibe: profilePayload.weekendVibe,
+          kundali_details: profilePayload.rasi,
+          slider_riser: parseInt(profilePayload.sliderRiser, 10) || 40,
+          slider_sunday: parseInt(profilePayload.sliderSunday, 10) || 65,
+          slider_spender: parseInt(profilePayload.sliderSpender, 10) || 68,
+          interests: selectedInterests,
+          hidden_dealbreakers: selectedDealbreakers,
+          phone_hash: phoneHash,
+          email_hash: emailHash,
+          avatar_url: profilePayload.avatarUrl || undefined
+        }, { onConflict: 'id' });
+
+        if (!error) {
+          document.getElementById('backend-status-text').textContent = 'Supabase Live • Synced';
+        }
+      } catch (err) {
+        console.warn('Supabase sync exception:', err);
+      }
+    }
+
+    async function recordInteractionInSupabase(targetId, action) {
+      if (!supabaseClient || !currentSupabaseUser) return;
+      try {
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(targetId)) return;
+        await supabaseClient.from('profile_interactions').upsert({
+          actor_id: currentSupabaseUser.id,
+          target_id: targetId,
+          action
+        }, { onConflict: 'actor_id,target_id' });
+      } catch (err) {
+        console.warn('Interaction sync note:', err);
+      }
+    }
+
+    async function subscribeToRealtimeMessages() {
+      if (!supabaseClient || !currentSupabaseUser) return;
+      if (realtimeMessageChannel) {
+        supabaseClient.removeChannel(realtimeMessageChannel);
+      }
+      realtimeMessageChannel = supabaseClient
+        .channel('mythunai-live-messages')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+          const msg = payload.new;
+          if (msg.sender_id === currentSupabaseUser.id) return;
+          const targetMatch = mutualMatches.find(m => m.dbMatchId === msg.match_id);
+          if (targetMatch) {
+            targetMatch.messages.push({
+              sender: 'them',
+              text: msg.content,
+              time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+            saveState();
+            renderMatchesSidebar();
+            renderActiveChat();
+            showToast(`New message from ${targetMatch.name}!`, 'info');
+          }
+        })
+        .subscribe();
+    }
+
+    async function fetchLiveSupabaseProfiles() {
+      if (!supabaseClient) return;
+      try {
+        const { data, error } = await supabaseClient.from('profiles').select('*').limit(20);
+        if (!error && Array.isArray(data) && data.length > 0) {
+          data.forEach(row => {
+            if (currentSupabaseUser && row.id === currentSupabaseUser.id) return;
+            if (discoverProfiles.some(p => p.id === row.id)) return;
+            discoverProfiles.unshift({
+              id: row.id,
+              name: row.full_name || 'Verified Member',
+              age: row.age || 28,
+              city: row.city || 'Bengaluru',
+              region: row.region || 'South India',
+              location: `${row.city || 'Bengaluru'}, ${row.state || 'India'}`,
+              languages: (row.languages && row.languages.length) ? row.languages.join(' • ') : 'Hindi • English • Regional',
+              profession: row.profession || 'Working Professional',
+              education: row.education || 'Verified Graduate',
+              verified: true,
+              trustTier: 'Blue + Gold Verified',
+              managedBy: row.managed_by || 'Self-Managed',
+              compatibility: 94,
+              porutham: row.kundali_details || '28/36 Gunas',
+              photoBlurred: !!row.photo_blur_enabled,
+              photoUnlocked: !row.photo_blur_enabled,
+              mutual: true,
+              voicePrompt: 'Live MyThunai Verified Member',
+              voiceDuration: '0:15',
+              whyYouFit: [
+                'Live verified member on MyThunai Bharat',
+                `Based in ${row.city || 'India'} • ${row.managed_by || 'Self-Managed'}`,
+                'Aligned values & family compatibility'
+              ],
+              values: {
+                weekend: row.weekend_vibe || 'Filter Coffee & Road Trips',
+                family: row.family_preference || 'Close-knit Nuclear / Joint Friendly',
+                relocation: row.city || 'Pan-India'
+              },
+              avatar: row.avatar_url || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
+              bio: row.bio || 'Excited to meet a thoughtful partner on MyThunai.',
+              interests: (row.interests && row.interests.length) ? row.interests : ['Filter Coffee & Chai ☕', 'Weekend Road Trips 🚗'],
+              aiReplies: [`Namaste! Great connecting with you on MyThunai from ${row.city || 'India'}!`]
+            });
+          });
+        }
+      } catch (err) {
+        console.warn('Could not fetch live profiles:', err);
+      }
+    }
+
+    async function handleAuthSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('auth-name').value.trim();
+      const phone = document.getElementById('auth-phone').value.trim();
+      const email = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
+      const city = document.getElementById('auth-city').value;
+
+      document.getElementById('input-name').value = name;
+      document.getElementById('input-phone').value = phone;
+      document.getElementById('input-email').value = email;
+      document.getElementById('input-location').value = city;
+
+      if (currentAuthMode === 'supabase' && window.supabase) {
+        const url = (document.getElementById('supa-url-input')?.value || DEFAULT_SUPABASE_URL).trim();
+        const key = (document.getElementById('supa-key-input')?.value || DEFAULT_SUPABASE_ANON_KEY).trim();
+
+        try {
+          supabaseClient = window.supabase.createClient(url, key);
+          let { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+          if (error) {
+            const signUpRes = await supabaseClient.auth.signUp({
+              email,
+              password,
+              options: { data: { full_name: name, phone } }
+            });
+            data = signUpRes.data;
+            error = signUpRes.error;
+          }
+
+          if (!error && data?.user) {
+            currentSupabaseUser = data.user;
+            document.getElementById('backend-status-text').textContent = 'Supabase Live • Connected';
+            await syncProfileToSupabase({
+              name,
+              age: document.getElementById('input-age').value,
+              managedBy: document.getElementById('input-managed-by').value,
+              location: city,
+              occupation: document.getElementById('input-occupation').value,
+              familyPref: document.getElementById('input-family-pref').value,
+              weekendVibe: document.getElementById('input-weekend-vibe').value,
+              rasi: document.getElementById('input-rasi').value,
+              sliderRiser: document.getElementById('slider-riser').value,
+              sliderSunday: document.getElementById('slider-sunday').value,
+              sliderSpender: document.getElementById('slider-spender').value,
+              phone,
+              email,
+              bio: document.getElementById('input-bio').value,
+              privacyBlur: document.getElementById('input-privacy-blur').checked
+            });
+            await fetchLiveSupabaseProfiles();
+            await subscribeToRealtimeMessages();
+            showToast('Connected to live MyThunai Supabase database!', 'success');
+          } else {
+            document.getElementById('backend-status-text').textContent = 'Local Sync • Fallback Active';
+            showToast(error?.message ? `Supabase note: ${error.message} (Running Local Sync)` : 'Signed in with Local Sync', 'warning');
+          }
+        } catch (err) {
+          document.getElementById('backend-status-text').textContent = 'Local Demo • Synced';
+          showToast('Launched with Local Persistence', 'info');
+        }
+      } else {
+        document.getElementById('backend-status-text').textContent = 'Local Demo • Synced';
+        showToast(`Welcome to MyThunai, ${name}!`, 'success');
+      }
+
+      enterAppShell();
+    }
+
+    function enterAppShell() {
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('app-shell').classList.remove('hidden');
+      renderInterestChips();
+      renderDealbreakerChips();
+      updateLivePreview();
+      filterProfiles();
+      renderMatchesSidebar();
+      renderActiveChat();
+      renderCoPilotTab();
+      updateNavBadges();
+      switchTab('discover');
+      lucide.createIcons();
+    }
+
+    function handleSignOut() {
+      if (supabaseClient) {
+        supabaseClient.auth.signOut().catch(() => {});
+      }
+      document.getElementById('app-shell').classList.add('hidden');
+      document.getElementById('auth-screen').classList.remove('hidden');
+      showToast('Returned to MyThunai Sign-In screen', 'info');
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
+      const activeSec = document.getElementById(`tab-${tabName}`);
+      if (activeSec) activeSec.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const isTarget = btn.dataset.tab === tabName;
+        btn.className = isTarget
+          ? 'nav-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm'
+          : 'nav-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+      });
+
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        const isTarget = btn.dataset.tab === tabName;
+        btn.className = isTarget
+          ? 'mobile-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-xs font-semibold text-brand-600 dark:text-brand-400 relative'
+          : 'mobile-nav-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-xs font-semibold text-slate-500 dark:text-slate-400 relative';
+      });
+
+      lucide.createIcons();
+    }
+
+    function updateNavBadges() {
+      const mCount = mutualMatches.length;
+      const cCount = coPilotShortlists.length;
+      ['nav-match-badge', 'mobile-match-badge', 'sidebar-match-count'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = mCount;
+      });
+      ['nav-copilot-badge', 'mobile-copilot-badge'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = cCount;
+      });
+    }
+
+    function startLiveDropCountdown() {
+      const el = document.getElementById('drop-countdown');
+      if (!el) return;
+      function tick() {
+        const now = new Date();
+        const target = new Date();
+        target.setHours(19, 0, 0, 0);
+        if (now >= target) target.setDate(target.getDate() + 1);
+        const diff = target - now;
+        const hrs = Math.floor(diff / (1000 * 60 * 60));
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        el.textContent = `Next 7:00 PM Drop: ${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m`;
+      }
+      tick();
+      setInterval(tick, 60000);
+    }
+
+    function filterProfiles(overrideCity) {
+      const cityVal = (overrideCity !== undefined ? overrideCity : document.getElementById('city-filter')?.value || 'all').toLowerCase();
+      const verifiedOnly = document.getElementById('verified-only-toggle')?.checked ?? true;
+
+      filteredQueue = discoverProfiles.filter(p => {
+        if (verifiedOnly && !p.verified) return false;
+        if (cityVal !== 'all') {
+          const matchCity = p.city.toLowerCase().includes(cityVal) || p.location.toLowerCase().includes(cityVal);
+          if (!matchCity) return false;
+        }
+        return true;
+      });
+
+      currentCardIndex = 0;
+      renderDiscoverCard();
+    }
+
+    function renderDiscoverCard() {
+      const wrapper = document.getElementById('discover-card-wrapper');
+      const actions = document.getElementById('discover-actions');
+      const dropPill = document.getElementById('drop-counter-pill');
+      const showPorutham = document.getElementById('porutham-toggle')?.checked ?? true;
+      if (!wrapper) return;
+
+      if (filteredQueue.length === 0 || currentCardIndex >= filteredQueue.length) {
+        if (actions) actions.classList.add('hidden');
+        if (dropPill) dropPill.textContent = 'Drop Complete';
+        wrapper.innerHTML = `
+          <div class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl p-8 text-center shadow-sm animate-card-enter">
+            <div class="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300 flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="sparkles" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-display font-bold text-xl text-slate-900 dark:text-white">You’ve Reviewed All Curated Profiles</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-sm mx-auto">
+              Switch to <strong>All India (40+ Cities)</strong> or reset your daily drop deck to review profiles again.
+            </p>
+            <button onclick="selectDiscoverCity('all')" class="mt-5 px-5 py-2.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition">
+              Show All India Profiles
+            </button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      if (actions) actions.classList.remove('hidden');
+      const p = filteredQueue[currentCardIndex];
+      if (dropPill) dropPill.textContent = `${currentCardIndex + 1} of ${filteredQueue.length} Curated`;
+
+      const isBlurred = p.photoBlurred && !p.photoUnlocked;
+      const isPlaying = playingAudioId === p.id;
+
+      wrapper.innerHTML = `
+        <article class="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-3xl shadow-xl overflow-hidden animate-card-enter">
+          <div class="relative aspect-[4/4.3] bg-stone-200 dark:bg-slate-800 overflow-hidden">
+            <img src="${p.avatar}" alt="${p.name}" onerror="this.src='https://placehold.co/600x750/be123c/ffffff?text=${encodeURIComponent(p.name)}'" class="w-full h-full object-cover transition-all duration-500 ${isBlurred ? 'blur-xl scale-110' : ''}" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
+
+            <div class="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between gap-2">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-950/75 backdrop-blur-md text-emerald-300 text-xs font-bold border border-white/15">
+                <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
+                <span>${p.trustTier}</span>
+              </span>
+              <span class="px-3 py-1 rounded-full bg-gradient-to-r from-brand-600 to-amber-500 text-white text-xs font-extrabold shadow">
+                ${p.compatibility}% Thunai Fit
+              </span>
+            </div>
+
+            ${isBlurred ? `
+              <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-slate-950/40 backdrop-blur-xs">
+                <div class="w-12 h-12 rounded-2xl bg-white/15 text-amber-300 flex items-center justify-center mb-2.5 border border-white/20">
+                  <i data-lucide="eye-off" class="w-6 h-6"></i>
+                </div>
+                <p class="text-white font-display font-bold text-base">Privacy Blur Enabled</p>
+                <p class="text-white/80 text-xs mt-1 max-w-xs">Photo reveals once you request & preview mutual interest.</p>
+                <button onclick="unlockProfilePhoto('${p.id}')" class="mt-3 px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold shadow-lg transition">
+                  Request & Preview Photo
+                </button>
+              </div>
+            ` : ''}
+
+            <div class="absolute bottom-4 left-4 right-4 text-white">
+              <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-400 text-slate-950 text-[11px] font-extrabold">
+                  ✓ ${p.managedBy}
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md text-white text-[11px] font-semibold">
+                  ${p.region}
+                </span>
+              </div>
+              <div class="flex items-baseline gap-2">
+                <h2 class="font-display font-extrabold text-2xl sm:text-3xl">${p.name}</h2>
+                <span class="text-xl font-semibold text-white/90">${p.age}</span>
+              </div>
+              <p class="text-xs sm:text-sm text-white/90 flex items-center gap-1.5 mt-1">
+                <i data-lucide="briefcase" class="w-3.5 h-3.5 text-amber-300"></i>
+                <span>${p.profession} • ${p.education}</span>
+              </p>
+              <p class="text-xs sm:text-sm text-white/90 flex items-center gap-1.5 mt-0.5">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i>
+                <span>${p.location} • ${p.languages}</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="p-5 space-y-4">
+            ${showPorutham ? `
+              <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 text-xs font-bold text-amber-800 dark:text-amber-300">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                <span>Kundali / Porutham: ${p.porutham}</span>
+              </div>
+            ` : ''}
+
+            <div class="p-3.5 rounded-2xl bg-stone-50 dark:bg-slate-800/70 border border-stone-200/80 dark:border-slate-700/80 flex items-center justify-between gap-3">
+              <button onclick="toggleVoicePlayback('${p.id}')" class="w-10 h-10 rounded-full bg-brand-600 hover:bg-brand-700 text-white flex items-center justify-center shrink-0 shadow transition">
+                <i data-lucide="${isPlaying ? 'pause' : 'play'}" class="w-4 h-4 fill-current"></i>
+              </button>
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">15s Voice Intro</div>
+                <div class="text-xs font-medium text-slate-700 dark:text-slate-200 truncate">"${p.voicePrompt}"</div>
+                <div class="flex items-end gap-1 h-3.5 mt-1.5">
+                  ${[45, 80, 60, 100, 70, 90, 50, 85, 65, 95, 55, 75].map((h, idx) => `
+                    <span style="height:${h}%; animation-delay:${idx * 0.08}s" class="w-1 rounded-full bg-brand-500/70 ${isPlaying ? 'wave-bar-active' : ''}"></span>
+                  `).join('')}
+                </div>
+              </div>
+              <span class="text-xs font-mono font-semibold text-slate-500">${p.voiceDuration}</span>
+            </div>
+
+            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${p.bio}</p>
+
+            <div class="p-4 rounded-2xl bg-gradient-to-br from-rose-50/80 to-amber-50/70 dark:from-brand-950/30 dark:to-slate-800/60 border border-brand-200/60 dark:border-brand-800/40 space-y-2">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-brand-700 dark:text-brand-300 flex items-center gap-1.5">
+                <i data-lucide="heart-handshake" class="w-4 h-4"></i>
+                <span>Why You Two Fit</span>
+              </div>
+              <ul class="space-y-1 text-xs text-slate-700 dark:text-slate-200">
+                ${p.whyYouFit.map(reason => `<li class="flex items-start gap-1.5"><span class="text-emerald-600 font-bold">✓</span><span>${reason}</span></li>`).join('')}
+              </ul>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 text-xs">
+              <div class="p-3 rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/70 dark:border-slate-700/70">
+                <span class="text-[11px] text-slate-400 block">Family Outlook</span>
+                <span class="font-semibold text-slate-800 dark:text-slate-200">${p.values.family}</span>
+              </div>
+              <div class="p-3 rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/70 dark:border-slate-700/70">
+                <span class="text-[11px] text-slate-400 block">Relocation</span>
+                <span class="font-semibold text-slate-800 dark:text-slate-200">${p.values.relocation}</span>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5">
+              ${p.interests.map(tag => `<span class="px-2.5 py-1 rounded-full bg-stone-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">${tag}</span>`).join('')}
+            </div>
+          </div>
+        </article>
+      `;
+      lucide.createIcons();
+    }
+
+    function unlockProfilePhoto(profileId) {
+      const target = discoverProfiles.find(p => p.id === profileId);
+      if (target) {
+        target.photoUnlocked = true;
+        renderDiscoverCard();
+        showToast(`Photo unlocked for ${target.name}!`, 'success');
+      }
+    }
+
+    function toggleVoicePlayback(profileId) {
+      if (playingAudioId === profileId) {
+        playingAudioId = null;
+        clearTimeout(audioTimer);
+        renderDiscoverCard();
+        return;
+      }
+      playingAudioId = profileId;
+      renderDiscoverCard();
+      showToast('Playing 15s Voice Intro...', 'info');
+      clearTimeout(audioTimer);
+      audioTimer = setTimeout(() => {
+        playingAudioId = null;
+        renderDiscoverCard();
+      }, 4500);
+    }
+
+    function handleSwipe(action) {
+      if (currentCardIndex >= filteredQueue.length) return;
+      const profile = filteredQueue[currentCardIndex];
+      recordInteractionInSupabase(profile.id, action);
+
+      if (action === 'pass') {
+        showToast(`Passed on ${profile.name}`, 'info');
+        currentCardIndex++;
+        renderDiscoverCard();
+        return;
+      }
+
+      latestMatchedProfile = profile;
+      const alreadyMatched = mutualMatches.some(m => m.id === profile.id);
+      if (!alreadyMatched) {
+        mutualMatches.unshift({
+          id: profile.id,
+          name: profile.name,
+          age: profile.age,
+          city: profile.city,
+          location: profile.location,
+          profession: profile.profession,
+          compatibility: profile.compatibility,
+          online: true,
+          qaUnlocked: false,
+          qaSummary: [],
+          avatar: profile.avatar,
+          messages: [
+            {
+              sender: "them",
+              text: `${action === 'super' ? '⭐ Thanks for the Priority Intro! ' : ''}Vanakkam / Namaste! Complete our 3-Question Mutual Icebreaker above to unlock open chat.`,
+              time: "Just now"
+            }
+          ],
+          aiReplies: profile.aiReplies || ['So glad we connected on MyThunai!']
+        });
+      }
+
+      saveState();
+      updateNavBadges();
+      renderMatchesSidebar();
+
+      document.getElementById('modal-match-subtitle').textContent = `You and ${profile.name} (${profile.city}) both expressed interest.`;
+      document.getElementById('modal-user-img').src = document.getElementById('preview-avatar')?.src || '';
+      document.getElementById('modal-partner-img').src = profile.avatar;
+      document.getElementById('match-modal').classList.remove('hidden');
+      lucide.createIcons();
+
+      currentCardIndex++;
+      renderDiscoverCard();
+    }
+
+    function closeMatchModal() {
+      document.getElementById('match-modal').classList.add('hidden');
+    }
+
+    function jumpToMatchedChat() {
+      closeMatchModal();
+      if (latestMatchedProfile) {
+        activeChatId = latestMatchedProfile.id;
+      }
+      switchTab('matches');
+      renderMatchesSidebar();
+      renderActiveChat();
+    }
+
+    function renderMatchesSidebar() {
+      const list = document.getElementById('matches-list');
+      if (!list) return;
+
+      if (mutualMatches.length === 0) {
+        list.innerHTML = `<div class="p-6 text-center text-xs text-slate-400">No matches yet. Tap Connect in Discover!</div>`;
+        return;
+      }
+
+      list.innerHTML = mutualMatches.map(m => {
+        const isActive = m.id === activeChatId;
+        const lastMsg = m.messages[m.messages.length - 1]?.text || 'New Thunai Match';
+        return `
+          <button onclick="selectChat('${m.id}')" class="w-full text-left p-4 flex items-center gap-3 transition ${isActive ? 'bg-brand-50/80 dark:bg-brand-950/40' : 'hover:bg-stone-50 dark:hover:bg-slate-800/50'}">
+            <div class="relative shrink-0">
+              <img src="${m.avatar}" alt="${m.name}" class="w-12 h-12 rounded-full object-cover border border-stone-200 dark:border-slate-700" />
+              <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900"></span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-1">
+                <span class="font-display font-bold text-sm text-slate-900 dark:text-white truncate">${m.name}</span>
+                <span class="text-[11px] font-bold text-brand-600 dark:text-brand-400">${m.compatibility}%</span>
+              </div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">${m.city} • ${m.qaUnlocked ? 'Chat Unlocked' : '🔒 3-Q Gate'}</div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 truncate mt-0.5">${lastMsg}</p>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectChat(matchId) {
+      activeChatId = matchId;
+      renderMatchesSidebar();
+      renderActiveChat();
+    }
+
+    function renderActiveChat() {
+      const header = document.getElementById('chat-header');
+      const feed = document.getElementById('chat-messages');
+      const icebreakersBar = document.getElementById('icebreakers-bar');
+      const inputForm = document.getElementById('chat-input-form');
+      const match = mutualMatches.find(m => m.id === activeChatId) || mutualMatches[0];
+
+      if (!match || !header || !feed) return;
+      activeChatId = match.id;
+
+      header.innerHTML = `
+        <div class="flex items-center gap-3">
+          <img src="${match.avatar}" alt="${match.name}" class="w-10 h-10 rounded-full object-cover" />
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h3 class="font-display font-bold text-sm sm:text-base text-slate-900 dark:text-white">${match.name}, ${match.age}</h3>
+              <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-semibold">${match.city}</span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">${match.profession}</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button onclick="openCoffeeModal('${match.city}')" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 text-xs font-semibold flex items-center gap-1 transition">
+            <i data-lucide="coffee" class="w-3.5 h-3.5"></i>
+            <span>Coffee Spots</span>
+          </button>
+          <button onclick="triggerVibeCallPrompt()" class="px-3 py-1.5 rounded-xl bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800/60 text-xs font-semibold flex items-center gap-1 transition">
+            <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+            <span>10m Vibe Call</span>
+          </button>
+          <button onclick="openSafetyModal()" title="Safety, Unmatch or Report" class="p-2 rounded-xl bg-stone-100 hover:bg-rose-50 dark:bg-slate-800 text-slate-600 hover:text-rose-600 transition">
+            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `;
+
+      if (!match.qaUnlocked) {
+        if (icebreakersBar) icebreakersBar.classList.add('hidden');
+        if (inputForm) inputForm.classList.add('hidden');
+        feed.innerHTML = `
+          <div class="bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800/60 rounded-3xl p-5 shadow-sm space-y-4 animate-card-enter">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 text-[11px] font-bold uppercase">
+                  🔒 Structured 3-Question Icebreaker Gate
+                </span>
+                <h4 class="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white mt-1.5">
+                  Answer 3 Questions to Unlock Open Chat with ${match.name.split(' ')[0]}
+                </h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Both answers reveal simultaneously—zero awkward "Hi" messages.</p>
+              </div>
+              <button type="button" onclick="autoFillAndRevealQA()" class="shrink-0 px-3 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-amber-500 text-white text-xs font-bold shadow transition active:scale-95">
+                Auto-Fill & Reveal Both
+              </button>
+            </div>
+
+            <form onsubmit="submitThreeQuestions(event)" class="space-y-3">
+              ${THREE_QUESTION_DECK.map((item, idx) => `
+                <div class="p-3 rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/80 dark:border-slate-700/80">
+                  <label class="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1.5">${idx + 1}. ${item.question}</label>
+                  <input id="qa-input-${item.id}" type="text" value="${item.myDefault}" required class="w-full bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+              `).join('')}
+              <button type="submit" class="w-full py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm shadow transition">
+                Reveal Answers & Unlock Free Chat
+              </button>
+            </form>
+          </div>
+        `;
+      } else {
+        if (icebreakersBar) icebreakersBar.classList.remove('hidden');
+        if (inputForm) inputForm.classList.remove('hidden');
+
+        const qaCardHtml = (match.qaSummary && match.qaSummary.length) ? `
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 text-xs space-y-2">
+            <div class="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Mutual 3-Question Icebreaker Unlocked</span>
+            </div>
+            ${match.qaSummary.map(q => `
+              <div class="pt-1.5 border-t border-amber-200/50 dark:border-amber-800/40">
+                <div class="font-semibold text-slate-800 dark:text-slate-200">${q.q}</div>
+                <div class="text-slate-600 dark:text-slate-300 mt-0.5"><strong>You:</strong> ${q.me}</div>
+                <div class="text-brand-700 dark:text-brand-300 mt-0.5"><strong>${match.name.split(' ')[0]}:</strong> ${q.them}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : '';
+
+        const msgsHtml = match.messages.map(msg => {
+          const isMe = msg.sender === 'me';
+          return `
+            <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+              <div class="max-w-[82%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm leading-relaxed ${
+                isMe
+                  ? 'bg-brand-600 text-white rounded-br-sm shadow-sm'
+                  : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-stone-200/80 dark:border-slate-700 rounded-bl-sm'
+              }">
+                ${msg.text}
+              </div>
+              <span class="text-[10px] text-slate-400 mt-1 px-1">${msg.time}</span>
+            </div>
+          `;
+        }).join('');
+
+        feed.innerHTML = qaCardHtml + msgsHtml;
+        feed.scrollTop = feed.scrollHeight;
+      }
+      lucide.createIcons();
+    }
+
+    function autoFillAndRevealQA() {
+      const match = mutualMatches.find(m => m.id === activeChatId);
+      if (!match) return;
+      match.qaUnlocked = true;
+      match.qaSummary = THREE_QUESTION_DECK.map(item => ({
+        q: item.question,
+        me: item.myDefault,
+        them: item.partnerAnswer
+      }));
+      match.messages.push({
+        sender: 'them',
+        text: `Loved reading your answers! Especially about festive family mornings—feels like we're on the exact same wavelength 😊`,
+        time: 'Just now'
+      });
+      saveState();
+      renderMatchesSidebar();
+      renderActiveChat();
+      showToast('3-Question Icebreaker revealed & chat unlocked!', 'success');
+    }
+
+    function submitThreeQuestions(event) {
+      event.preventDefault();
+      const match = mutualMatches.find(m => m.id === activeChatId);
+      if (!match) return;
+      match.qaUnlocked = true;
+      match.qaSummary = THREE_QUESTION_DECK.map(item => ({
+        q: item.question,
+        me: document.getElementById(`qa-input-${item.id}`)?.value || item.myDefault,
+        them: item.partnerAnswer
+      }));
+      match.messages.push({
+        sender: 'them',
+        text: `Both our answers are revealed! So excited to chat properly now.`,
+        time: 'Just now'
+      });
+      saveState();
+      renderMatchesSidebar();
+      renderActiveChat();
+      showToast('Answers revealed simultaneously!', 'success');
+    }
+
+    function sendIcebreaker(text) {
+      const input = document.getElementById('chat-input');
+      if (input) {
+        input.value = text;
+        handleSendMessage(new Event('submit'));
+      }
+    }
+
+    function handleSendMessage(event) {
+      event.preventDefault();
+      const input = document.getElementById('chat-input');
+      const text = input?.value.trim();
+      if (!text) return;
+
+      const match = mutualMatches.find(m => m.id === activeChatId);
+      if (!match) return;
+
+      match.messages.push({
+        sender: 'me',
+        text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+      input.value = '';
+      saveState();
+      renderMatchesSidebar();
+      renderActiveChat();
+
+      setTimeout(() => {
+        const replyPool = match.aiReplies || ['That sounds wonderful! Tell me more.'];
+        const reply = replyPool[match.messages.length % replyPool.length];
+        match.messages.push({
+          sender: 'them',
+          text: reply,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+        saveState();
+        renderMatchesSidebar();
+        renderActiveChat();
+      }, 900);
+    }
+
+    function triggerVibeCallPrompt() {
+      const match = mutualMatches.find(m => m.id === activeChatId);
+      if (!match) return;
+      match.qaUnlocked = true;
+      match.messages.push({
+        sender: 'me',
+        text: '📞 Sent a 10-Minute Audio Vibe Call invite for this evening at 8:00 PM IST.',
+        time: 'Just now'
+      });
+      saveState();
+      renderActiveChat();
+      showToast('10-Min Vibe Call invite sent!', 'success');
+    }
+
+    function openCoffeeModal(defaultCity) {
+      const select = document.getElementById('coffee-city-select');
+      if (select && defaultCity) {
+        const opt = Array.from(select.options).find(o => o.value.toLowerCase() === defaultCity.toLowerCase());
+        if (opt) select.value = opt.value;
+      }
+      renderCoffeeSpots();
+      document.getElementById('coffee-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeCoffeeModal() {
+      document.getElementById('coffee-modal').classList.add('hidden');
+    }
+
+    function renderCoffeeSpots() {
+      const city = document.getElementById('coffee-city-select')?.value || 'Bengaluru';
+      const list = document.getElementById('coffee-spots-list');
+      if (!list) return;
+
+      const spots = THUNAI_COFFEE_SPOTS[city] || [
+        { name: `Third Wave / Blue Tokai Specialty Cafe, ${city} Central`, vibe: 'Well-lit central hub • Great for 45-min coffee meetups', rating: '4.8★ Verified Spot' },
+        { name: `Heritage Courtyard Lounge, ${city}`, vibe: 'Calm daytime ambience • Family-safe public venue', rating: '4.7★ Verified Spot' }
+      ];
+
+      list.innerHTML = spots.map(s => `
+        <div class="p-3.5 rounded-2xl bg-stone-50 dark:bg-slate-800/70 border border-stone-200 dark:border-slate-700 flex items-center justify-between gap-3">
+          <div>
+            <div class="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">${s.name}</div>
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">${s.vibe}</div>
+            <span class="inline-block mt-1 text-[10px] font-bold text-amber-700 dark:text-amber-300">${s.rating}</span>
+          </div>
+          <button onclick="proposeCoffeeSpot('${s.name.replace(/'/g, "\\'")}')" class="shrink-0 px-3 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition">
+            Propose
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function proposeCoffeeSpot(spotName) {
+      const match = mutualMatches.find(m => m.id === activeChatId);
+      const safetyOn = document.getElementById('coffee-safety-checkin')?.checked;
+      closeCoffeeModal();
+      if (!match) return;
+      match.qaUnlocked = true;
+      match.messages.push({
+        sender: 'me',
+        text: `☕ Thunai Safe Meetup Invite: Would you like to meet for a 45-min coffee at ${spotName}?${safetyOn ? ' (Trusted Contact Safety Check-In enabled 🛡️)' : ''}`,
+        time: 'Just now'
+      });
+      saveState();
+      renderActiveChat();
+      showToast('Safe Coffee Spot invite sent!', 'success');
+    }
+
+    function openSafetyModal() {
+      document.getElementById('safety-modal').classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeSafetyModal() {
+      document.getElementById('safety-modal').classList.add('hidden');
+    }
+
+    function executeSafetyAction(action) {
+      closeSafetyModal();
+      mutualMatches = mutualMatches.filter(m => m.id !== activeChatId);
+      activeChatId = mutualMatches[0]?.id || null;
+      saveState();
+      updateNavBadges();
+      renderMatchesSidebar();
+      renderActiveChat();
+      showToast(action === 'report' ? 'Profile blocked & reported to Trust Team.' : 'Unmatched quietly.', 'warning');
+    }
+
+    function renderCoPilotTab() {
+      const membersList = document.getElementById('copilot-members-list');
+      const shortlistFeed = document.getElementById('copilot-shortlist-feed');
+
+      if (membersList) {
+        membersList.innerHTML = coPilotMembers.map(cp => `
+          <div class="p-3 rounded-2xl bg-stone-50 dark:bg-slate-800/60 border border-stone-200/80 dark:border-slate-700/80 flex items-center justify-between">
+            <div>
+              <div class="font-bold text-sm text-slate-900 dark:text-white">${cp.name}</div>
+              <div class="text-xs text-slate-500">${cp.role} • ${cp.permissions}</div>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold">${cp.status}</span>
+          </div>
+        `).join('');
+      }
+
+      if (shortlistFeed) {
+        if (coPilotShortlists.length === 0) {
+          shortlistFeed.innerHTML = `<div class="p-6 text-center text-xs text-slate-400">All family shortlists reviewed!</div>`;
+        } else {
+          shortlistFeed.innerHTML = coPilotShortlists.map(item => `
+            <div class="p-4 rounded-2xl bg-stone-50 dark:bg-slate-800/50 border border-stone-200 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <img src="${item.profile.avatar}" alt="${item.profile.name}" class="w-16 h-16 rounded-2xl object-cover shrink-0" />
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-display font-bold text-base text-slate-900 dark:text-white">${item.profile.name}, ${item.profile.age}</span>
+                  <span class="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 text-[11px] font-bold">
+                    Suggested by ${item.suggestedBy}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">${item.profile.profession} • ${item.profile.location} • ${item.profile.porutham}</p>
+                <p class="text-xs text-slate-700 dark:text-slate-300 italic mt-1.5">"${item.note}"</p>
+              </div>
+              <div class="flex sm:flex-col gap-2 w-full sm:w-auto">
+                <button onclick="approveCoPilotShortlist('${item.id}')" class="flex-1 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition">
+                  Approve & Match
+                </button>
+                <button onclick="declineCoPilotShortlist('${item.id}')" class="flex-1 px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold">
+                  Pass
+                </button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function handleInviteCoPilot(event) {
+      event.preventDefault();
+      const nameInput = document.getElementById('copilot-name-input');
+      const roleInput = document.getElementById('copilot-role-input');
+      const name = nameInput?.value.trim();
+      if (!name) return;
+
+      coPilotMembers.push({
+        id: 'cp_' + Date.now(),
+        name,
+        role: roleInput?.value || 'Parent',
+        status: 'Invited',
+        permissions: 'Shortlist Only'
+      });
+      nameInput.value = '';
+      saveState();
+      renderCoPilotTab();
+      showToast(`Invited ${name} as Family Co-Pilot (Zero chat access)!`, 'success');
+    }
+
+    function approveCoPilotShortlist(shortlistId) {
+      const item = coPilotShortlists.find(s => s.id === shortlistId);
+      if (!item) return;
+
+      coPilotShortlists = coPilotShortlists.filter(s => s.id !== shortlistId);
+      mutualMatches.unshift({
+        id: item.profile.id,
+        name: item.profile.name,
+        age: item.profile.age,
+        city: item.profile.location.split(',')[0],
+        location: item.profile.location,
+        profession: item.profile.profession,
+        compatibility: item.profile.compatibility,
+        online: true,
+        qaUnlocked: false,
+        qaSummary: [],
+        avatar: item.profile.avatar,
+        messages: [
+          {
+            sender: 'them',
+            text: `Vanakkam / Namaste! Glad our families connected us—unlock our 3-Question Icebreaker below to say hello!`,
+            time: 'Just now'
+          }
+        ],
+        aiReplies: ['So nice to connect! How has your week been?']
+      });
+      activeChatId = item.profile.id;
+      saveState();
+      updateNavBadges();
+      renderCoPilotTab();
+      renderMatchesSidebar();
+      renderActiveChat();
+      showToast(`Approved ${item.profile.name}! Moved to Matches & Chat.`, 'success');
+    }
+
+    function declineCoPilotShortlist(shortlistId) {
+      coPilotShortlists = coPilotShortlists.filter(s => s.id !== shortlistId);
+      saveState();
+      updateNavBadges();
+      renderCoPilotTab();
+      showToast('Shortlist declined quietly (Co-Pilot not notified).', 'info');
+    }
+
+    function renderInterestChips() {
+      const container = document.getElementById('interest-selector');
+      if (!container) return;
+      container.innerHTML = ALL_INTERESTS.map(tag => {
+        const active = selectedInterests.includes(tag);
+        return `
+          <button type="button" onclick="toggleInterestTag('${tag}')" class="px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
+            active
+              ? 'bg-brand-600 text-white border-brand-600'
+              : 'bg-stone-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-stone-200 dark:border-slate-700'
+          }">
+            ${tag}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function toggleInterestTag(tag) {
+      if (selectedInterests.includes(tag)) {
+        selectedInterests = selectedInterests.filter(t => t !== tag);
+      } else if (selectedInterests.length < 6) {
+        selectedInterests.push(tag);
+      } else {
+        showToast('You can select up to 6 interests', 'warning');
+      }
+      renderInterestChips();
+      updateLivePreview();
+    }
+
+    function renderDealbreakerChips() {
+      const container = document.getElementById('dealbreakers-selector');
+      if (!container) return;
+      container.innerHTML = ALL_DEALBREAKERS.map(db => {
+        const active = selectedDealbreakers.includes(db);
+        return `
+          <button type="button" onclick="toggleDealbreakerTag('${db}')" class="px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
+            active
+              ? 'bg-slate-900 dark:bg-amber-500 text-white dark:text-slate-950 border-slate-900 dark:border-amber-500'
+              : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-stone-200 dark:border-slate-700'
+          }">
+            ${active ? '✓ ' : ''}${db}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function toggleDealbreakerTag(db) {
+      if (selectedDealbreakers.includes(db)) {
+        selectedDealbreakers = selectedDealbreakers.filter(d => d !== db);
+      } else if (selectedDealbreakers.length < 3) {
+        selectedDealbreakers.push(db);
+      } else {
+        showToast('Maximum 3 hidden dealbreakers allowed', 'warning');
+      }
+      renderDealbreakerChips();
+    }
+
+    function updateLivePreview() {
+      const name = document.getElementById('input-name')?.value || 'Aravind Subramanian';
+      const age = document.getElementById('input-age')?.value || '29';
+      const managed = document.getElementById('input-managed-by')?.value || 'Self-Managed';
+      const location = document.getElementById('input-location')?.value || 'Dindigul, Tamil Nadu';
+      const occupation = document.getElementById('input-occupation')?.value || 'Product Architect';
+      const familyPref = document.getElementById('input-family-pref')?.value || 'Close-knit Nuclear / Joint Friendly';
+      const weekendVibe = document.getElementById('input-weekend-vibe')?.value || 'Filter Coffee & Road Trips';
+      const rasi = document.getElementById('input-rasi')?.value || 'Simham / Leo • Magam';
+      const bio = document.getElementById('input-bio')?.value || '';
+      const blurOn = document.getElementById('input-privacy-blur')?.checked || false;
+
+      if (document.getElementById('preview-name')) document.getElementById('preview-name').textContent = name;
+      if (document.getElementById('preview-age')) document.getElementById('preview-age').textContent = age;
+      if (document.getElementById('preview-managed-badge')) document.getElementById('preview-managed-badge').textContent = `✓ ${managed}`;
+      if (document.getElementById('preview-location')) document.getElementById('preview-location').textContent = location;
+      if (document.getElementById('preview-occupation')) document.getElementById('preview-occupation').textContent = occupation;
+      if (document.getElementById('preview-family-val')) document.getElementById('preview-family-val').textContent = familyPref;
+      if (document.getElementById('preview-weekend-val')) document.getElementById('preview-weekend-val').textContent = weekendVibe;
+      if (document.getElementById('preview-jathagam-text')) document.getElementById('preview-jathagam-text').textContent = `${rasi} (28/36 Gunas)`;
+      if (document.getElementById('preview-bio')) document.getElementById('preview-bio').textContent = bio;
+
+      const avatarEl = document.getElementById('preview-avatar');
+      const blurBadge = document.getElementById('preview-blur-badge');
+      if (avatarEl) avatarEl.classList.toggle('blur-md', blurOn);
+      if (blurBadge) blurBadge.classList.toggle('hidden', !blurOn);
+
+      const tagsEl = document.getElementById('preview-tags');
+      if (tagsEl) {
+        tagsEl.innerHTML = selectedInterests.map(t =>
+          `<span class="px-2.5 py-1 rounded-full bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 text-xs font-semibold">${t}</span>`
+        ).join('');
+      }
+    }
+
+    async function handlePhotoUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        if (document.getElementById('preview-avatar')) {
+          document.getElementById('preview-avatar').src = e.target.result;
+        }
+        saveState();
+      };
+      reader.readAsDataURL(file);
+
+      if (supabaseClient && currentSupabaseUser) {
+        try {
+          const ext = file.name.split('.').pop() || 'jpg';
+          const filePath = `${currentSupabaseUser.id}/avatar_${Date.now()}.${ext}`;
+          const { error: uploadError } = await supabaseClient.storage
+            .from('mythunai-media')
+            .upload(filePath, file, { upsert: true });
+
+          if (!uploadError) {
+            const { data: signedData } = await supabaseClient.storage
+              .from('mythunai-media')
+              .createSignedUrl(filePath, 60 * 60 * 24 * 365);
+
+            if (signedData?.signedUrl) {
+              document.getElementById('preview-avatar').src = signedData.signedUrl;
+              await supabaseClient
+                .from('profiles')
+                .update({ avatar_url: signedData.signedUrl })
+                .eq('id', currentSupabaseUser.id);
+              saveState();
+              showToast('Photo uploaded securely to Supabase Storage!', 'success');
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn('Storage upload fallback:', err);
+        }
+      }
+
+      showToast('Profile photo updated!', 'success');
+    }
+
+    function toggleVoiceRecording() {
+      isRecordingVoice = !isRecordingVoice;
+      const label = document.getElementById('voice-record-label');
+      if (isRecordingVoice) {
+        if (label) label.textContent = 'Recording... (Tap to Save)';
+        showToast('Recording 15s Voice Intro...', 'info');
+      } else {
+        if (label) label.textContent = '15s Voice Intro Saved ✓';
+        showToast('15s Voice Intro saved to your profile!', 'success');
+      }
+    }
+
+    function checkForDuplicates() {
+      const phone = (document.getElementById('input-phone')?.value || '').replace(/\D/g, '').slice(-10);
+      const email = (document.getElementById('input-email')?.value || '').trim().toLowerCase();
+      const banner = document.getElementById('duplicate-alert-banner');
+      const reasonEl = document.getElementById('duplicate-alert-reason');
+
+      const hit = EXISTING_MEMBER_RECORDS.find(rec =>
+        (phone && rec.phone === phone) || (email && rec.email === email)
+      );
+
+      if (hit && banner && reasonEl) {
+        reasonEl.textContent = `Duplicate Guard matched existing verified account (${hit.email} / +91 ${hit.phone}). MyThunai enforces one verified profile per member.`;
+        banner.classList.remove('hidden');
+      } else if (banner) {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function simulateDuplicateAlert() {
+      const banner = document.getElementById('duplicate-alert-banner');
+      const reasonEl = document.getElementById('duplicate-alert-reason');
+      if (banner && reasonEl) {
+        reasonEl.textContent = 'Simulated Duplicate Guard Alert: Matching mobile hash (+91 98400 11223) & perceptual photo hash detected on an existing profile.';
+        banner.classList.remove('hidden');
+        showToast('Duplicate Profile Alert triggered!', 'warning');
+      }
+    }
+
+    function dismissDuplicateAlert() {
+      document.getElementById('duplicate-alert-banner')?.classList.add('hidden');
+    }
+
+    async function handleProfileSave(event) {
+      event.preventDefault();
+      checkForDuplicates();
+      updateLivePreview();
+      saveState();
+
+      if (supabaseClient && currentSupabaseUser) {
+        await syncProfileToSupabase({
+          name: document.getElementById('input-name').value,
+          age: document.getElementById('input-age').value,
+          managedBy: document.getElementById('input-managed-by').value,
+          location: document.getElementById('input-location').value,
+          occupation: document.getElementById('input-occupation').value,
+          familyPref: document.getElementById('input-family-pref').value,
+          weekendVibe: document.getElementById('input-weekend-vibe').value,
+          rasi: document.getElementById('input-rasi').value,
+          sliderRiser: document.getElementById('slider-riser').value,
+          sliderSunday: document.getElementById('slider-sunday').value,
+          sliderSpender: document.getElementById('slider-spender').value,
+          phone: document.getElementById('input-phone').value,
+          email: document.getElementById('input-email').value,
+          bio: document.getElementById('input-bio').value,
+          privacyBlur: document.getElementById('input-privacy-blur').checked
+        });
+      }
+
+      showToast('Profile saved & verified across MyThunai!', 'success');
+    }
+
+    window.onload = function () {
+      populatePanIndiaCities();
+      loadPersistedState();
+      startLiveDropCountdown();
+      lucide.createIcons();
+    };
+  </script>
+</body>
+</html>
